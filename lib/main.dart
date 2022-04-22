@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'app.dart';
+// import 'db/db_manager.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  // await DBManager.initialize();
+  runApp(MyApp());
 }
-
