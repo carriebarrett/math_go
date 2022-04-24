@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
+import 'package:math_go/mapbox_credentials.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key}) : super(key: key);
@@ -25,8 +26,12 @@ class _MapViewScreenState extends State<MapViewScreen> {
           ),
           layers: [
             TileLayerOptions(
-                urlTemplate:
-                    "https://api.mapbox.com/styles/v1/jorellana28/", // I removed this url for privacy so this won't work
+                // NOTE TO ALL TEAMMATES:
+                // Create an UNTRACKED file called "mapbox_credentials.dart"
+                // Store your private mapbox credentials as a const myAccessUrl
+                // Ex:
+                // const String myAccessUrl = "https://api.mapbox.com/styles/...
+                urlTemplate: myAccessUrl,
                 attributionBuilder: (_) {
                   return const Text("© Mapbox");
                 },

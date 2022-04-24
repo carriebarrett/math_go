@@ -1,3 +1,6 @@
+# Credentials/keys/sensitive information
+mapbox_credentials.dart
+
 # Miscellaneous
 *.class
 *.log
