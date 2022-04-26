@@ -6,6 +6,8 @@ import 'package:location/location.dart';
 
 import 'package:math_go/.mapbox_credentials.dart';
 
+import '../widgets/beastie.dart';
+
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key}) : super(key: key);
   static const routeName = 'map view';
@@ -56,16 +58,10 @@ class _MapViewScreenState extends State<MapViewScreen> {
             MarkerLayerOptions(
               markers: [
                 Marker(
-                  width: 40.0,
-                  height: 40.0,
-                  point: latlng.LatLng(51.5, -0.09),
-                  builder: (ctx) => Container(
-                    child: const Image(
-                      image: NetworkImage(
-                          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-                    ),
-                  ),
-                ),
+                    width: 40.0,
+                    height: 40.0,
+                    point: latlng.LatLng(51.5, -0.09),
+                    builder: (ctx) => Beastie())
               ],
             ),
           ],
