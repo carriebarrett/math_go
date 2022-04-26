@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
+import 'package:math_go/.mapbox_credentials.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key}) : super(key: key);
@@ -26,11 +27,15 @@ class _MapViewScreenState extends State<MapViewScreen> {
           layers: [
             TileLayerOptions(
                 urlTemplate:
-                    "https://api.mapbox.com/styles/v1/jorellana28/", // I removed this url for privacy so this won't work
+                    "https://api.mapbox.com/styles/v1/jorellana28/cl26wle1j001f14npuqp2ln0d/tiles/256/{z}/{x}/{y}@2x?access_token=" +
+                        mapboxAPIKey,
                 attributionBuilder: (_) {
                   return const Text("© Mapbox");
                 },
-                additionalOptions: {'id': 'mapbox.mapbox-streets-v8'}),
+                additionalOptions: {
+                  'accessToken': mapboxAPIKey,
+                  'id': 'mapbox.mapbox-streets-v8'
+                }),
             MarkerLayerOptions(
               markers: [
                 Marker(
