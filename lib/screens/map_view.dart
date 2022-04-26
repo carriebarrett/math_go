@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
+import 'package:location/location.dart';
+
 import 'package:math_go/.mapbox_credentials.dart';
 
 class MapViewScreen extends StatefulWidget {
@@ -13,6 +15,20 @@ class MapViewScreen extends StatefulWidget {
 }
 
 class _MapViewScreenState extends State<MapViewScreen> {
+  LocationData? locationData;
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+  }
+
+  void getLocation() async {
+    var locationService = Location();
+    locationData = await locationService.getLocation();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +36,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
           child: Stack(children: [
         FlutterMap(
           options: MapOptions(
-            center: latlng.LatLng(51.5, -0.09),
+            center: latlng.LatLng(locationData?.latitude ?? 51.5,
+                locationData?.longitude ?? -0.09),
             zoom: 18.0,
             interactiveFlags: InteractiveFlag.none,
           ),
