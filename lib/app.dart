@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:math_go/screens/battle.dart';
 import 'package:math_go/screens/home.dart';
 import 'package:math_go/screens/map_view.dart';
-// import 'package:math_go/screens/map_view.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);

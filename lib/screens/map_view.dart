@@ -3,7 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-
+import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart';
 
 import '../widgets/beastie.dart';
@@ -18,6 +18,7 @@ class MapViewScreen extends StatefulWidget {
 
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
+  var locationService = Location();
 
   @override
   void initState() {
@@ -26,7 +27,29 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   void getLocation() async {
-    var locationService = Location();
+    try {
+      var _serviceEnabled = await locationService.serviceEnabled();
+      if (!_serviceEnabled) {
+        _serviceEnabled = await locationService.requestService();
+        if (!_serviceEnabled) {
+          print('Failed to enable service. Returning.');
+          return;
+        }
+      }
+
+      var _permissionGranted = await locationService.hasPermission();
+      if (_permissionGranted == PermissionStatus.denied) {
+        _permissionGranted = await locationService.requestPermission();
+        if (_permissionGranted != PermissionStatus.granted) {
+          print('Location service permission not granted. Returning.');
+        }
+      }
+
+      locationData = await locationService.getLocation();
+    } on PlatformException catch (e) {
+      print('Error: ${e.toString()}, code: ${e.code}');
+      locationData = null;
+    }
     locationData = await locationService.getLocation();
     setState(() {});
   }
@@ -36,7 +59,31 @@ class _MapViewScreenState extends State<MapViewScreen> {
     return Scaffold(
       body: Center(
           child: Stack(children: [
-        FlutterMap(
+        map(context),
+        const Positioned(
+          bottom: 0,
+          left: 1,
+          right: 1,
+          child: Image(
+            height: 80.0,
+            width: 80.0,
+            image: NetworkImage(
+                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+          ),
+        )
+      ])),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {},
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget map(BuildContext context) {
+    if (locationData == null) {
+      return CircularProgressIndicator();
+    } else {
+      return FlutterMap(
           options: MapOptions(
             center: latlng.LatLng(locationData?.latitude ?? 51.5,
                 locationData?.longitude ?? -0.09),
@@ -65,23 +112,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
               ],
             ),
           ],
-        ),
-        const Positioned(
-          bottom: 0,
-          left: 1,
-          right: 1,
-          child: Image(
-            height: 80.0,
-            width: 80.0,
-            image: NetworkImage(
-                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-          ),
-        )
-      ])),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
-        child: const Icon(Icons.add),
-      ),
-    );
+        );
+    }
   }
 }
