@@ -45,9 +45,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
           ),
           layers: [
             TileLayerOptions(
-                urlTemplate:
-                    "https://api.mapbox.com/styles/v1/jorellana28/cl26wle1j001f14npuqp2ln0d/tiles/256/{z}/{x}/{y}@2x?access_token=" +
-                        mapboxAPIKey,
+                urlTemplate: mapboxURL,
                 attributionBuilder: (_) {
                   return const Text("© Mapbox");
                 },
