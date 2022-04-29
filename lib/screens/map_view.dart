@@ -5,8 +5,8 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart';
-
 import '../widgets/beastie.dart';
+import '../widgets/compass.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key}) : super(key: key);
@@ -70,7 +70,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
             image: NetworkImage(
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
           ),
-        )
+        ),
+        buildCompass()
       ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
@@ -93,8 +94,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
           layers: [
             TileLayerOptions(
                 urlTemplate:
-                    "https://api.mapbox.com/styles/v1/jorellana28/cl26wle1j001f14npuqp2ln0d/tiles/256/{z}/{x}/{y}@2x?access_token=" +
-                        mapboxAPIKey,
+                    mapboxURL,
                 attributionBuilder: (_) {
                   return const Text("© Mapbox");
                 },
