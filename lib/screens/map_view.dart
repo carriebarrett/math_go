@@ -93,8 +93,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
           ),
           layers: [
             TileLayerOptions(
-                urlTemplate:
-                    mapboxURL,
+                urlTemplate: mapboxURL,
                 attributionBuilder: (_) {
                   return const Text("© Mapbox");
                 },
