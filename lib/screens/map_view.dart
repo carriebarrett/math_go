@@ -106,7 +106,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 Marker(
                     width: 40.0,
                     height: 40.0,
-                    point: latlng.LatLng(51.5, -0.09),
+                    point: latlng.LatLng(locationData?.latitude ?? 51.5,
+                      locationData?.longitude ?? -0.09),
                     builder: (ctx) => Beastie())
               ],
             ),
