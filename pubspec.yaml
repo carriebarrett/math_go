@@ -15,6 +15,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_map: ^0.14.0
   location: ^4.3.0
+  flutter_compass: ^0.7.0
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ flutter:
 
   assets:
     - lib/assets/
+    - images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

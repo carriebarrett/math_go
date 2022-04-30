@@ -6,6 +6,7 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 
 import 'package:math_go/.mapbox_credentials.dart';
+import 'package:math_go/widgets/compass.dart';
 
 import '../widgets/beastie.dart';
 
@@ -65,6 +66,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
             ),
           ],
         ),
+        buildCompass(),
         const Positioned(
           bottom: 0,
           left: 1,
