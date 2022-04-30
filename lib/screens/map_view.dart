@@ -9,7 +9,9 @@ import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
 
 class MapViewScreen extends StatefulWidget {
-  const MapViewScreen({Key? key}) : super(key: key);
+  String title;
+
+  MapViewScreen({Key? key, required this.title}) : super(key: key);
   static const routeName = 'map view';
 
   @override
@@ -57,6 +59,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Center(child: Text(widget.title))),
       body: Center(
           child: Stack(children: [
         map(context),
@@ -82,7 +85,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   Widget map(BuildContext context) {
     if (locationData == null) {
-      return CircularProgressIndicator();
+      return Center(child: CircularProgressIndicator());
     } else {
       return FlutterMap(
           options: MapOptions(
@@ -106,7 +109,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 Marker(
                     width: 40.0,
                     height: 40.0,
-                    point: latlng.LatLng(51.5, -0.09),
+                    point: latlng.LatLng(locationData?.latitude ?? 51.5,
+                locationData?.longitude ?? -0.09),
                     builder: (ctx) => Beastie())
               ],
             ),

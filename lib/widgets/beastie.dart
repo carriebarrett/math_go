@@ -7,7 +7,10 @@ class Beastie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {Navigator.of(context).pushNamed(BattleScreen.routeName)},
+      onTap: () {
+        print("hello");
+        Navigator.of(context).pushNamed(BattleScreen.routeName);
+        },
       child: Container(
         child: const Image(
           image: NetworkImage(
