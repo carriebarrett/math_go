@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:math_go/screens/battle.dart';
 import 'package:math_go/screens/home.dart';
 import 'package:math_go/screens/map_view.dart';
+import 'screens/login.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MapViewScreen(),
+      home: const LoginScreen(),
       routes: _routes,
     );
   }

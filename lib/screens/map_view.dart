@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
