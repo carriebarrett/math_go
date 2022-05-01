@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "131155449813",
+    "project_id": "math-go-a907e",
+    "storage_bucket": "math-go-a907e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:131155449813:android:e3009b6bb76e1859478f5c",
+        "android_client_info": {
+          "package_name": "com.example.math_go"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "131155449813-4dn2qc44difr9qjh5hcv9sggv8amqpb7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.math_go",
+            "certificate_hash": "82c71442e279fdb1181181c5495fe173898afb54"
+          }
+        },
+        {
+          "client_id": "131155449813-33j4p8kac9qpcjqs71krl47843lm312b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNqfKSzoOTpfc4xzmnjQS4mWol73IJqwM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "131155449813-33j4p8kac9qpcjqs71krl47843lm312b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
