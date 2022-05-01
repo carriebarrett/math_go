@@ -30,11 +30,9 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
 
-  assets:
-    - lib/assets/
-
   # To add assets to your application, add an assets section, like this:
   assets:
+    - lib/assets/
     - images/compass.png
   #   - images/a_dot_ham.jpeg
 

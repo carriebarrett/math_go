@@ -8,7 +8,6 @@ class Beastie extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        print("hello");
         Navigator.of(context).pushNamed(BattleScreen.routeName);
         },
       child: Container(

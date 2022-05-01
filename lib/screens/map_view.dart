@@ -60,7 +60,10 @@ class _MapViewScreenState extends State<MapViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Center(child: Text(widget.title))),
+      appBar: AppBar(
+        title: Center(child: Text(widget.title)),
+        automaticallyImplyLeading: false
+        ),
       body: Center(
           child: Stack(children: [
         map(context),
@@ -75,7 +78,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
           ),
         ),
-        buildCompass()
+        // buildCompass()
       ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
