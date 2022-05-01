@@ -67,18 +67,17 @@ class _MapViewScreenState extends State<MapViewScreen> {
       body: Center(
           child: Stack(children: [
         map(context),
-        const Positioned(
-          bottom: 0,
-          left: 1,
-          right: 1,
-          child: Image(
-            height: 80.0,
-            width: 80.0,
-            image: NetworkImage(
-                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-          ),
-        ),
-        // buildCompass()
+        // const Positioned(
+        //   bottom: 0,
+        //   left: 1,
+        //   right: 1,
+        //   child: Image(
+        //     height: 80.0,
+        //     width: 80.0,
+        //     image: NetworkImage(
+        //         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+        //   ),
+        // )
       ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},

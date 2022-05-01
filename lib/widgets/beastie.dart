@@ -11,10 +11,7 @@ class Beastie extends StatelessWidget {
         Navigator.of(context).pushNamed(BattleScreen.routeName);
         },
       child: Container(
-        child: const Image(
-          image: NetworkImage(
-              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-        ),
+        child: Image.asset('images/beasties/blob1.png')
       ),
     );
   }

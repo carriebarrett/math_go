@@ -33,7 +33,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/assets/
-    - images/compass.png
+    - images/
+    - images/beasties/blob1.png
   #   - images/a_dot_ham.jpeg
 
   # To add custom fonts to your application, add a fonts section here,
