@@ -72,7 +72,6 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
           ),
         ),
-        buildCompass()
       ])),
       floatingActionButton: FloatingActionButton(
         onPressed: () => {},
