@@ -19,11 +19,24 @@ class _BattleScreenState extends State<BattleScreen> {
             key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: [
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 5, 0),
+                  child: Container(
+                    alignment: FractionalOffset.topRight,
+                    child: GestureDetector(child: const Icon(Icons.close_rounded),
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },),
+                  ),
+                ),
+                const SizedBox(height: 5),
                 const Text('2 + 3 = ?',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
                 ),
+                const SizedBox(height: 5),
                 TextFormField(
                   controller: _textEditingController,
                   validator: (value){
