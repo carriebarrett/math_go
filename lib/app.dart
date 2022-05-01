@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:math_go/screens/battle.dart';
 import 'package:math_go/screens/home.dart';
 import 'package:math_go/screens/map_view.dart';
+import 'screens/login.dart';
 
 String appTitle = 'Math GO!';
 
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MapViewScreen(title: appTitle),
+      home: const LoginScreen(),
       routes: _routes,
     );
   }
