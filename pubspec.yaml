@@ -15,7 +15,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_map: ^0.14.0
   location: ^4.3.0
+  firebase_auth: ^3.3.16
+  google_sign_in: ^5.3.0
   flutter_compass: ^0.7.0
+
 
 dev_dependencies:
   flutter_test:
