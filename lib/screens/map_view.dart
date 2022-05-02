@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart';
 import '../widgets/beastie.dart';
-import '../widgets/compass.dart';
 import './collection.dart';
 
 class MapViewScreen extends StatefulWidget {
-  String title;
+  const MapViewScreen({Key? key, required this.title}) : super(key: key);
 
-  MapViewScreen({Key? key, required this.title}) : super(key: key);
+  final String title;
   static const routeName = 'map view';
 
   @override
@@ -62,29 +60,16 @@ class _MapViewScreenState extends State<MapViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(widget.title)),
-        automaticallyImplyLeading: false
-        ),
+          title: Center(child: Text(widget.title)),
+          automaticallyImplyLeading: false),
       body: Center(
           child: Stack(children: [
         map(context),
-        // const Positioned(
-        //   bottom: 0,
-        //   left: 1,
-        //   right: 1,
-        //   child: Image(
-        //     height: 80.0,
-        //     width: 80.0,
-        //     image: NetworkImage(
-        //         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-        //   ),
-        // )
       ])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.of(context).pushNamed(CollectionScreen.routeName)
-        },
+        onPressed: () =>
+            {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
         child: const Icon(Icons.add),
       ),
     );
@@ -92,37 +77,37 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   Widget map(BuildContext context) {
     if (locationData == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else {
       return FlutterMap(
-          options: MapOptions(
-            center: latlng.LatLng(locationData?.latitude ?? 51.5,
-                locationData?.longitude ?? -0.09),
-            zoom: 18.0,
-            interactiveFlags: InteractiveFlag.none,
+        options: MapOptions(
+          center: latlng.LatLng(
+              locationData?.latitude ?? 51.5, locationData?.longitude ?? -0.09),
+          zoom: 18.0,
+          interactiveFlags: InteractiveFlag.none,
+        ),
+        layers: [
+          TileLayerOptions(
+              urlTemplate: mapboxURL,
+              attributionBuilder: (_) {
+                return const Text("© Mapbox");
+              },
+              additionalOptions: {
+                'accessToken': mapboxAPIKey,
+                'id': 'mapbox.mapbox-streets-v8'
+              }),
+          MarkerLayerOptions(
+            markers: [
+              Marker(
+                  width: 40.0,
+                  height: 40.0,
+                  point: latlng.LatLng(locationData?.latitude ?? 51.5,
+                      locationData?.longitude ?? -0.09),
+                  builder: (ctx) => const Beastie())
+            ],
           ),
-          layers: [
-            TileLayerOptions(
-                urlTemplate: mapboxURL,
-                attributionBuilder: (_) {
-                  return const Text("© Mapbox");
-                },
-                additionalOptions: {
-                  'accessToken': mapboxAPIKey,
-                  'id': 'mapbox.mapbox-streets-v8'
-                }),
-            MarkerLayerOptions(
-              markers: [
-                Marker(
-                    width: 40.0,
-                    height: 40.0,
-                    point: latlng.LatLng(locationData?.latitude ?? 51.5,
-                locationData?.longitude ?? -0.09),
-                    builder: (ctx) => Beastie())
-              ],
-            ),
-          ],
-        );
+        ],
+      );
     }
   }
 }

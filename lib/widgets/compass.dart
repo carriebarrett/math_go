@@ -11,43 +11,37 @@ Widget buildCompass() {
       }
 
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       }
 
       double? direction = snapshot.data!.heading;
 
-      // if direction is null, then device does not support this sensor
+      // If direction is null, then device does not support this sensor
       // show error message
-      if (direction == null)
-        return Center(
+      if (direction == null) {
+        return const Center(
           child: Text("Device does not have sensors !"),
         );
+      }
 
-      double compass_image_offset = 45; // the compass image default is NE
+      double compassImageOffset = 45; // the compass image default is NE
 
-      return
-          // Material(
-          // shape: CircleBorder(),
-          // clipBehavior: Clip.antiAlias,
-          // elevation: 4.0,
-          // child:
-          Container(
-        padding: EdgeInsets.all(20.0),
-        alignment: Alignment.topRight,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-        ),
-        child: Transform.rotate(
-          angle: ((direction + compass_image_offset) * (math.pi / 180) * -1),
-          child: Image.asset(
-            'images/compass.png',
-            height: 50,
-            width: 50,
-        ),
-      ));
-      //);
+      return Container(
+          padding: const EdgeInsets.all(20.0),
+          alignment: Alignment.topRight,
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+          ),
+          child: Transform.rotate(
+            angle: ((direction + compassImageOffset) * (math.pi / 180) * -1),
+            child: Image.asset(
+              'images/compass.png',
+              height: 50,
+              width: 50,
+            ),
+          ));
     },
   );
 }
