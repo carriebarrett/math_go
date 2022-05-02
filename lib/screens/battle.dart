@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class BattleScreen extends StatefulWidget {
-  const BattleScreen({Key? key}) : super(key: key);
+  String title;
+  BattleScreen({Key? key, required this.title}) : super(key: key);
   static const routeName = 'battle';
   @override
   State<BattleScreen> createState() => _BattleScreenState();
@@ -66,7 +67,7 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('This app bar is temporary')),
+      appBar: AppBar(title: Text(widget.title)),
       body: Center(
         child: TextButton(
           onPressed: () async {

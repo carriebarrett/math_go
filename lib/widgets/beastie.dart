@@ -7,12 +7,11 @@ class Beastie extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => {Navigator.of(context).pushNamed(BattleScreen.routeName)},
+      onTap: () {
+        Navigator.of(context).pushNamed(BattleScreen.routeName);
+        },
       child: Container(
-        child: const Image(
-          image: NetworkImage(
-              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-        ),
+        child: Image.asset('images/beasties/blob1.png')
       ),
     );
   }

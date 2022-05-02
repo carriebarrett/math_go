@@ -17,6 +17,8 @@ dependencies:
   location: ^4.3.0
   firebase_auth: ^3.3.16
   google_sign_in: ^5.3.0
+  flutter_compass: ^0.7.0
+
 
 dev_dependencies:
   flutter_test:
@@ -31,12 +33,11 @@ flutter_native_splash:
 flutter:
   uses-material-design: true
 
+  # To add assets to your application, add an assets section, like this:
   assets:
     - lib/assets/
-
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+    - images/
+    - images/beasties/blob1.png
   #   - images/a_dot_ham.jpeg
 
   # To add custom fonts to your application, add a fonts section here,
