@@ -38,6 +38,7 @@ flutter:
     - lib/assets/
     - images/
     - images/beasties/blob1.png
+    - images/beasties/
   #   - images/a_dot_ham.jpeg
 
   # To add custom fonts to your application, add a fonts section here,

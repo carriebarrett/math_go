@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart';
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
+import './collection.dart';
 
 class MapViewScreen extends StatefulWidget {
   String title;
@@ -79,8 +80,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
         //   ),
         // )
       ])),
+      // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () => {
+          Navigator.of(context).pushNamed(CollectionScreen.routeName)
+        },
         child: const Icon(Icons.add),
       ),
     );
