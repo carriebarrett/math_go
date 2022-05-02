@@ -25,10 +25,11 @@ class LoginScreen extends StatelessWidget {
           ElevatedButton(
               style: style,
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const MapViewScreen()));
+                Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => const MapViewScreen()));
               },
               child: const Text("Existing Account")),
           const SizedBox(
