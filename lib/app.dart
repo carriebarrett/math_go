@@ -11,8 +11,7 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
   final _routes = {
-    // ignore: todo
-    MapViewScreen.routeName: (context) => MapViewScreen(title: appTitle), // TODO: Will probably move everything to a separate screen
+    MapViewScreen.routeName: (context) => MapViewScreen(title: appTitle),
     HomeScreen.routeName: (context) => HomeScreen(title: appTitle),
     BattleScreen.routeName: (context) => BattleScreen(title: appTitle),
     CollectionScreen.routeName: (context) => CollectionScreen(title: appTitle),
