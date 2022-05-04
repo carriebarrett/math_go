@@ -9,10 +9,8 @@ class Beastie extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).pushNamed(BattleScreen.routeName);
-        },
-      child: Container(
-        child: Image.asset('images/beasties/blob1.png')
-      ),
+      },
+      child: Image.asset('images/beasties/blob1.png'),
     );
   }
 }

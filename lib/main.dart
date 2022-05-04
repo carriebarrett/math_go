@@ -4,7 +4,6 @@ import 'app.dart';
 // import 'db/db_manager.dart';
 
 void main() {
-  //WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   // await DBManager.initialize();

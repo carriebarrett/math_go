@@ -18,7 +18,7 @@ Widget buildCompass() {
 
       double? direction = snapshot.data!.heading;
 
-      // if direction is null, then device does not support this sensor
+      // If direction is null, then device does not support this sensor
       // show error message
       if (direction == null) {
         return const Center(

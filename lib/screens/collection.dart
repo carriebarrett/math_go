@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class CollectionScreen extends StatefulWidget {
-  String title;
-  CollectionScreen({Key? key, required this.title}) : super(key: key);
+  const CollectionScreen({Key? key, required this.title}) : super(key: key);
+  final String title;
   static const routeName = 'collection';
 
   @override
@@ -14,7 +14,8 @@ class CapturedBeastie {
   String filename;
   String type;
 
-  CapturedBeastie({required this.name, required this.filename, required this.type});
+  CapturedBeastie(
+      {required this.name, required this.filename, required this.type});
 }
 
 // Collection list will be populated with info from database - temporarily hardcoded
@@ -23,10 +24,12 @@ class _CollectionScreenState extends State<CollectionScreen> {
   List<CapturedBeastie> beasties = [
     CapturedBeastie(
         name: 'Mowgli', filename: 'images/beasties/leaf7.png', type: 'Leaf'),
-    CapturedBeastie(name: 'Apollo',
+    CapturedBeastie(
+        name: 'Apollo',
         filename: 'images/beasties/flower6.png',
         type: 'Flower'),
-    CapturedBeastie(name: 'Arty', filename: 'images/beasties/blob10.png', type: 'Blob'),
+    CapturedBeastie(
+        name: 'Arty', filename: 'images/beasties/blob10.png', type: 'Blob'),
   ];
 
   @override
@@ -49,9 +52,10 @@ class _CollectionScreenState extends State<CollectionScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          const Text('Beastie Collection',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+          const Text(
+            'Beastie Collection',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
           ),
           const SizedBox(height: 10),
           Expanded(
@@ -68,15 +72,15 @@ class _CollectionScreenState extends State<CollectionScreen> {
                             const SizedBox(width: 20),
                             Image.asset(beasties[index].filename),
                             const SizedBox(width: 50),
-                            Text(beasties[index].name,
-                              style: const TextStyle( fontSize: 20),
+                            Text(
+                              beasties[index].name,
+                              style: const TextStyle(fontSize: 20),
                             ),
                           ],
                         ),
                       ),
                     );
-                }
-              ),
+                  }),
             ),
           ),
         ],

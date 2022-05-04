@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
-import 'package:math_go/.mapbox_credentials.dart';
+import 'package:math_go/.mapbox_credentials.dart'; // ignore: uri_does_not_exist
 import '../widgets/beastie.dart';
-import '../widgets/compass.dart';
 import './collection.dart';
 
 class MapViewScreen extends StatefulWidget {
-  String title;
+  const MapViewScreen({Key? key, required this.title}) : super(key: key);
 
-  MapViewScreen({Key? key, required this.title}) : super(key: key);
+  final String title;
   static const routeName = 'map view';
 
   @override
@@ -36,7 +34,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
       if (!_serviceEnabled) {
         _serviceEnabled = await locationService.requestService();
         if (!_serviceEnabled) {
-          print('Failed to enable service. Returning.');
+          debugPrint('Failed to enable service. Returning.');
           return;
         }
       }
@@ -45,13 +43,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
       if (_permissionGranted == PermissionStatus.denied) {
         _permissionGranted = await locationService.requestPermission();
         if (_permissionGranted != PermissionStatus.granted) {
-          print('Location service permission not granted. Returning.');
+          debugPrint('Location service permission not granted. Returning.');
+          return;
         }
       }
 
       locationData = await locationService.getLocation();
     } on PlatformException catch (e) {
-      print('Error: ${e.toString()}, code: ${e.code}');
+      debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
     locationData = await locationService.getLocation();
@@ -73,9 +72,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
       ])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.of(context).pushNamed(CollectionScreen.routeName)
-        },
+        onPressed: () =>
+            {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
         child: const Icon(Icons.add),
       ),
     );
@@ -87,19 +85,19 @@ class _MapViewScreenState extends State<MapViewScreen> {
     } else {
       return FlutterMap(
         options: MapOptions(
-          center: latlng.LatLng(locationData?.latitude ?? 51.5,
-              locationData?.longitude ?? -0.09),
+          center: latlng.LatLng(
+              locationData?.latitude ?? 51.5, locationData?.longitude ?? -0.09),
           zoom: 18.0,
           interactiveFlags: InteractiveFlag.none,
         ),
         layers: [
           TileLayerOptions(
-              urlTemplate: mapboxURL,
+              urlTemplate: mapboxURL, // ignore: undefined_identifier
               attributionBuilder: (_) {
                 return const Text("© Mapbox");
               },
               additionalOptions: {
-                'accessToken': mapboxAPIKey,
+                'accessToken': mapboxAPIKey, // ignore: undefined_identifier
                 'id': 'mapbox.mapbox-streets-v8'
               }),
           MarkerLayerOptions(
@@ -108,8 +106,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   width: 40.0,
                   height: 40.0,
                   point: latlng.LatLng(locationData?.latitude ?? 51.5,
-              locationData?.longitude ?? -0.09),
-                  builder: (ctx) => Beastie())
+                      locationData?.longitude ?? -0.09),
+                  builder: (ctx) => const Beastie())
             ],
           ),
         ],
