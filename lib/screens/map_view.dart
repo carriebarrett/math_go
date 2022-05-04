@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart'; // ignore: uri_does_not_exist
 import '../widgets/beastie.dart';
+import '../widgets/compass.dart';
 import './collection.dart';
 
 class MapViewScreen extends StatefulWidget {
