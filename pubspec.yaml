@@ -36,6 +36,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - lib/assets/
+    - lib/assets/logoshrink-removebg.png
     - images/
     - images/beasties/blob1.png
     - images/beasties/

@@ -62,23 +62,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(widget.title)),
+        centerTitle: true,
+        title: Image.asset('./lib/assets/logoshrink-removebg.png', height: 40),
         automaticallyImplyLeading: false
         ),
       body: Center(
           child: Stack(children: [
         map(context),
-        // const Positioned(
-        //   bottom: 0,
-        //   left: 1,
-        //   right: 1,
-        //   child: Image(
-        //     height: 80.0,
-        //     width: 80.0,
-        //     image: NetworkImage(
-        //         'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-        //   ),
-        // )
+        IgnorePointer(child: buildCompass())
       ])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
@@ -92,37 +83,37 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   Widget map(BuildContext context) {
     if (locationData == null) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     } else {
       return FlutterMap(
-          options: MapOptions(
-            center: latlng.LatLng(locationData?.latitude ?? 51.5,
-                locationData?.longitude ?? -0.09),
-            zoom: 18.0,
-            interactiveFlags: InteractiveFlag.none,
+        options: MapOptions(
+          center: latlng.LatLng(locationData?.latitude ?? 51.5,
+              locationData?.longitude ?? -0.09),
+          zoom: 18.0,
+          interactiveFlags: InteractiveFlag.none,
+        ),
+        layers: [
+          TileLayerOptions(
+              urlTemplate: mapboxURL,
+              attributionBuilder: (_) {
+                return const Text("© Mapbox");
+              },
+              additionalOptions: {
+                'accessToken': mapboxAPIKey,
+                'id': 'mapbox.mapbox-streets-v8'
+              }),
+          MarkerLayerOptions(
+            markers: [
+              Marker(
+                  width: 40.0,
+                  height: 40.0,
+                  point: latlng.LatLng(locationData?.latitude ?? 51.5,
+              locationData?.longitude ?? -0.09),
+                  builder: (ctx) => Beastie())
+            ],
           ),
-          layers: [
-            TileLayerOptions(
-                urlTemplate: mapboxURL,
-                attributionBuilder: (_) {
-                  return const Text("© Mapbox");
-                },
-                additionalOptions: {
-                  'accessToken': mapboxAPIKey,
-                  'id': 'mapbox.mapbox-streets-v8'
-                }),
-            MarkerLayerOptions(
-              markers: [
-                Marker(
-                    width: 40.0,
-                    height: 40.0,
-                    point: latlng.LatLng(locationData?.latitude ?? 51.5,
-                locationData?.longitude ?? -0.09),
-                    builder: (ctx) => Beastie())
-              ],
-            ),
-          ],
-        );
+        ],
+      );
     }
   }
 }

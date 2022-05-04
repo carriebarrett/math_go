@@ -67,13 +67,16 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset('./lib/assets/logoshrink-removebg.png', height: 40)
+      ),
       body: Center(
         child: TextButton(
           onPressed: () async {
             await showQuestion(context);
           },
-          child: Text('Show Question',)
+          child: const Text('Show Question',)
         ),
       ),
     );
