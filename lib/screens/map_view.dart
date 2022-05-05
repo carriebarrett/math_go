@@ -63,7 +63,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('./lib/assets/logoshrink-removebg.png', height: 40),
+        title: Image.asset('assets/images/logos_and_icons/logoshrink-removebg.png', height: 40),
         automaticallyImplyLeading: false
         ),
       body: Center(

@@ -23,13 +23,13 @@ class CapturedBeastie {
 class _CollectionScreenState extends State<CollectionScreen> {
   List<CapturedBeastie> beasties = [
     CapturedBeastie(
-        name: 'Mowgli', filename: 'images/beasties/leaf7.png', type: 'Leaf'),
+        name: 'Mowgli', filename: './assets/images/beasties/leaf7.png', type: 'Leaf'),
     CapturedBeastie(
         name: 'Apollo',
-        filename: 'images/beasties/flower6.png',
+        filename: './assets/images/beasties/flower6.png',
         type: 'Flower'),
     CapturedBeastie(
-        name: 'Arty', filename: 'images/beasties/blob10.png', type: 'Blob'),
+        name: 'Arty', filename: './assets/images/beasties/blob10.png', type: 'Blob'),
   ];
 
   @override
@@ -37,7 +37,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('./lib/assets/logoshrink-removebg.png', height: 40)
+        title: Image.asset('assets/images/logos_and_icons/logoshrink-removebg.png', height: 40)
       ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -48,7 +48,7 @@ class _CollectionScreenState extends State<CollectionScreen> {
             alignment: Alignment.topCenter,
             child: SizedBox(
               height: 140,
-              child: Image.asset('images/user.png'),
+              child: Image.asset('assets/images/user.png'),
             ),
           ),
           const SizedBox(height: 10),

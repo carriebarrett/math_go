@@ -14,14 +14,14 @@ class LoginScreen extends StatelessWidget {
         constraints: const BoxConstraints.expand(),
         decoration: const BoxDecoration(
           image: DecorationImage(
-              image: AssetImage("lib/assets/background.png"),
+              image: AssetImage("assets/images/logos_and_icons/background.png"),
               fit: BoxFit.cover),
         ),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
               width: 200,
               height: 200,
-              child: Image.asset("lib/assets/logoshrink.png")),
+              child: Image.asset("assets/images/logos_and_icons/logoshrink.png")),
           ElevatedButton(
               style: style,
               onPressed: () {

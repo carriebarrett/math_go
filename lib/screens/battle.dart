@@ -76,7 +76,7 @@ class _BattleScreenState extends State<BattleScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Image.asset('./lib/assets/logoshrink-removebg.png', height: 40)
+        title: Image.asset('assets/images/logos_and_icons/logoshrink-removebg.png', height: 40)
       ),
       body: Center(
         child: TextButton(

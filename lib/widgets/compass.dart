@@ -36,7 +36,7 @@ Widget buildCompass() {
           child: Transform.rotate(
             angle: ((direction + compassImageOffset) * (math.pi / 180) * -1),
             child: Image.asset(
-              'images/compass_orange.png',
+              'assets/images/logos_and_icons/compass_orange.png',
               height: 50,
               width: 50,
             ),

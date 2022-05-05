@@ -10,7 +10,7 @@ class Beastie extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(BattleScreen.routeName);
       },
-      child: Image.asset('images/beasties/blob1.png'),
+      child: Image.asset('assets/images/beasties/blob1.png'),
     );
   }
 }
