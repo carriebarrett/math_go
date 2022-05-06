@@ -48,3 +48,4 @@ app.*.map.json
 
 # Credentials
 lib/.mapbox_credentials.dart
+*.env
