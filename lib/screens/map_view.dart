@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-import 'package:flutter/services.dart';
 import 'package:math_go/.mapbox_credentials.dart'; // ignore: uri_does_not_exist
+
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
+import '../constants.dart';
 import './collection.dart';
 
 class MapViewScreen extends StatefulWidget {
@@ -50,34 +52,13 @@ class _MapViewScreenState extends State<MapViewScreen> {
       }
 
       locationData = await locationService.getLocation();
+
     } on PlatformException catch (e) {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
     locationData = await locationService.getLocation();
     setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Image.asset('assets/images/logos_and_icons/logoshrink-removebg.png', height: 40),
-        automaticallyImplyLeading: false
-        ),
-      body: Center(
-          child: Stack(children: [
-        map(context),
-        IgnorePointer(child: buildCompass())
-      ])),
-      // borrowed this button temporarily to link to collection screen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 
   Widget map(BuildContext context) {
@@ -114,5 +95,27 @@ class _MapViewScreenState extends State<MapViewScreen> {
         ],
       );
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset(logoImage, height: 40),
+        automaticallyImplyLeading: false
+        ),
+      body: Center(
+          child: Stack(children: [
+        map(context),
+        IgnorePointer(child: buildCompass())
+      ])),
+      // borrowed this button temporarily to link to collection screen
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
