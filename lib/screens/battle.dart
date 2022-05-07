@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../constants.dart';
+
 class BattleScreen extends StatefulWidget {
   const BattleScreen({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -74,15 +76,17 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset(logoImage, height: 40)
+      ),
       body: Center(
         child: TextButton(
-            onPressed: () async {
-              await showQuestion(context);
-            },
-            child: const Text(
-              'Show Question',
-            )),
+          onPressed: () async {
+            await showQuestion(context);
+          },
+          child: const Text('Show Question',)
+        ),
       ),
     );
   }
