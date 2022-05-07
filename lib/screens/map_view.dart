@@ -1,11 +1,14 @@
+import 'dart:math';
+
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-import 'package:math_go/.mapbox_credentials.dart'; // ignore: uri_does_not_exist
 
+import '../.mapbox_credentials.dart';
+import '../widgets/avatar.dart';
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
@@ -85,16 +88,41 @@ class _MapViewScreenState extends State<MapViewScreen> {
           MarkerLayerOptions(
             markers: [
               Marker(
-                  width: 40.0,
-                  height: 40.0,
+                  width: 110.0,
+                  height: 110.0,
                   point: latlng.LatLng(locationData?.latitude ?? 51.5,
                       locationData?.longitude ?? -0.09),
-                  builder: (ctx) => const Beastie())
+                  builder: (ctx) => const Avatar()),
+              spawnBeastie(),
+              spawnBeastie(),
+              spawnBeastie()
             ],
           ),
         ],
       );
     }
+  }
+
+  Marker spawnBeastie() {
+    var random = Random();
+    double longitudeRange = 0.00085;
+    double latitudeRange = 0.00088;
+    int randNum = random.nextInt(2);
+    int sign = 0;
+    if (randNum == 0) {
+      sign = -1;
+    } else {
+      sign = 1;
+    }
+    double randomLon = sign * (random.nextDouble() * longitudeRange + .00015);
+    double randomLat = sign * (random.nextDouble() * latitudeRange + .00032);
+    debugPrint('($randomLat, $randomLon)');
+    return Marker(
+        width: 40.0,
+        height: 40.0,
+        point: latlng.LatLng((locationData?.latitude ?? 51.5) + randomLat,
+            (locationData?.longitude! ?? -0.09) + randomLon),
+        builder: (ctx) => const Beastie());
   }
 
   @override
