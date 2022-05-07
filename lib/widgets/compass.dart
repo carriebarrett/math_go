@@ -25,11 +25,10 @@ Widget buildCompass() {
           child: Text("Device does not have sensors !"),
         );
       }
-
       double compassImageOffset = 45; // the compass image default is NE
 
       return Container(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(5.0),
           alignment: Alignment.topRight,
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
@@ -37,7 +36,7 @@ Widget buildCompass() {
           child: Transform.rotate(
             angle: ((direction + compassImageOffset) * (math.pi / 180) * -1),
             child: Image.asset(
-              'images/compass.png',
+              'assets/images/logos_and_icons/compass_orange.png',
               height: 50,
               width: 50,
             ),

@@ -28,19 +28,16 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
 flutter_native_splash:
-  background_image: lib/assets/background.png
-  image: lib/assets/logo.png
+  background_image: assets/images/logos_and_icons/background.png
+  image: assets/images/logos_and_icons/logo.png
 
 flutter:
-  uses-material-design: true
-
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/
-    - images/
-    - images/beasties/blob1.png
-    - images/beasties/
-  #   - images/a_dot_ham.jpeg
+    - assets/images/
+    - assets/images/beasties/
+    - assets/images/logos_and_icons/
+  uses-material-design: true
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
