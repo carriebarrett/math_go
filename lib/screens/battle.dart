@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:flutter/services.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 import '../constants.dart';
 
@@ -12,6 +15,14 @@ class BattleScreen extends StatefulWidget {
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
+  late ArCoreController arCoreController;
+
+  Future<void> _onArCoreViewCreated(ArCoreController controller) async {
+    arCoreController = controller;
+    final bytes = (await rootBundle.load('assets/images/beasties/blob1.png')).buffer.asUint8List();
+    final beastie = ArCoreImage(bytes: bytes, width: 100, height: 100);
+  }
+
 
   Future<void> showQuestion(BuildContext context) async {
     return await showDialog(
@@ -80,13 +91,15 @@ class _BattleScreenState extends State<BattleScreen> {
         centerTitle: true,
         title: Image.asset(logoImage, height: 40)
       ),
-      body: Center(
-        child: TextButton(
+      body: ArCoreView(
+        onArCoreViewCreated: _onArCoreViewCreated,
+        enableTapRecognizer: true,
+ /*       child: TextButton(
           onPressed: () async {
             await showQuestion(context);
           },
-          child: const Text('Show Question',)
-        ),
+          child: const Text('Show Question',),
+        ),*/
       ),
     );
   }

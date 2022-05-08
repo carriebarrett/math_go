@@ -11,21 +11,22 @@ dependencies:
     sdk: flutter
 
   flutter_native_splash: ^2.1.6
-  firebase_core: ^1.15.0
-  cupertino_icons: ^1.0.2
+  firebase_core: ^1.16.0
+  cupertino_icons: ^1.0.4
   flutter_map: ^0.14.0
   location: ^4.3.0
-  firebase_auth: ^3.3.16
+  firebase_auth: ^3.3.17
   google_sign_in: ^5.3.0
   flutter_compass: ^0.7.0
-  firebase_database: ^9.0.12
+  firebase_database: ^9.0.13
+  arcore_flutter_plugin: ^0.1.0-null-safety.3
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^1.0.0
+  flutter_lints: ^1.0.4
 
 flutter_native_splash:
   background_image: assets/images/logos_and_icons/background.png
