@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:math_go/screens/map_view.dart';
 
 import '../constants.dart';
 
@@ -12,6 +15,19 @@ class BattleScreen extends StatefulWidget {
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(milliseconds: 30000), handleTimeout);
+  }
+
+  void handleTimeout() {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('The beastie got away!'),
+    ));
+    Navigator.of(context).pushNamed(MapViewScreen.routeName);
+  }
 
   Future<void> showQuestion(BuildContext context) async {
     return await showDialog(
@@ -76,17 +92,16 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Image.asset(logoImage, height: 40)
-      ),
+      appBar:
+          AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
       body: Center(
         child: TextButton(
-          onPressed: () async {
-            await showQuestion(context);
-          },
-          child: const Text('Show Question',)
-        ),
+            onPressed: () async {
+              await showQuestion(context);
+            },
+            child: const Text(
+              'Show Question',
+            )),
       ),
     );
   }
