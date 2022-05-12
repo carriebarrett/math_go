@@ -20,7 +20,6 @@ dependencies:
   flutter_compass: ^0.7.0
   firebase_database: ^9.0.12
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

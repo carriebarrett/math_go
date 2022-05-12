@@ -1,4 +1,3 @@
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,49 +56,58 @@ class _MapViewScreenState extends State<MapViewScreen> {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
-    locationData = await locationService.getLocation();
     setState(() {});
   }
 
   Widget map(BuildContext context) {
-    Beastie beastie1 = Beastie(locationData: locationData);
-    Beastie beastie2 = Beastie(locationData: locationData);
-    Beastie beastie3 = Beastie(locationData: locationData);
-    if (locationData != null) {
-      return FlutterMap(
-        options: MapOptions(
-          center: latlng.LatLng(
-              locationData!.latitude!, locationData!.longitude!),
-          zoom: 18.0,
-          interactiveFlags: InteractiveFlag.none,
-        ),
-        layers: [
-          TileLayerOptions(
-              urlTemplate: mapboxURL, // ignore: undefined_identifier
-              attributionBuilder: (_) {
-                return const Text("© Mapbox");
-              },
-              additionalOptions: {
-                'accessToken': mapboxAPIKey, // ignore: undefined_identifier
-                'id': 'mapbox.mapbox-streets-v8'
-              }),
-          MarkerLayerOptions(
-            markers: [
-              Marker(
-                  width: 110.0,
-                  height: 110.0,
-                  point: latlng.LatLng(locationData!.latitude!,
-                      locationData!.longitude!),
-                  builder: (ctx) => const Avatar()),
-              beastie1.spawnMarker(),
-              beastie2.spawnMarker(),
-              beastie3.spawnMarker()
-            ],
-          ),
-        ],
-      );
-    } else {
+    MapControllerImpl mapController = MapControllerImpl();
+    if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
+    } else {
+      return StreamBuilder(
+          stream: locationService.onLocationChanged.asBroadcastStream(),
+          builder: (context, AsyncSnapshot<LocationData> currLocation) {
+            if (!currLocation.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            latlng.LatLng mapCenter = latlng.LatLng(
+                currLocation.data?.latitude ?? 51.5,
+                currLocation.data?.longitude ?? -0.09);
+            const zoomLevel = 18.0;
+            mapController.onReady.then((_) {
+              mapController.move(mapCenter, zoomLevel);
+            });
+            return FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                zoom: zoomLevel,
+                interactiveFlags: InteractiveFlag.none,
+              ),
+              layers: [
+                TileLayerOptions(
+                    urlTemplate: mapboxURL, // ignore: undefined_identifier
+                    attributionBuilder: (_) {
+                      return const Text("© Mapbox");
+                    },
+                    additionalOptions: {
+                      'accessToken':
+                          mapboxAPIKey, // ignore: undefined_identifier
+                      'id': 'mapbox.mapbox-streets-v8'
+                    }),
+                MarkerLayerOptions(
+                  markers: [
+                    Marker(
+                        width: 40.0,
+                        height: 40.0,
+                        point: latlng.LatLng(
+                            currLocation.data?.latitude ?? 51.5,
+                            currLocation.data?.longitude ?? -0.09),
+                        builder: (ctx) => const Beastie())
+                  ],
+                ),
+              ],
+            );
+          });
     }
   }
 
