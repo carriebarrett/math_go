@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +53,6 @@ class _MapViewScreenState extends State<MapViewScreen> {
       }
 
       locationData = await locationService.getLocation();
-
     } on PlatformException catch (e) {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
@@ -65,13 +62,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   Widget map(BuildContext context) {
-    if (locationData == null) {
-      return const Center(child: CircularProgressIndicator());
-    } else {
+    Beastie beastie1 = Beastie(locationData: locationData);
+    Beastie beastie2 = Beastie(locationData: locationData);
+    Beastie beastie3 = Beastie(locationData: locationData);
+    if (locationData != null) {
       return FlutterMap(
         options: MapOptions(
           center: latlng.LatLng(
-              locationData?.latitude ?? 51.5, locationData?.longitude ?? -0.09),
+              locationData!.latitude!, locationData!.longitude!),
           zoom: 18.0,
           interactiveFlags: InteractiveFlag.none,
         ),
@@ -90,54 +88,31 @@ class _MapViewScreenState extends State<MapViewScreen> {
               Marker(
                   width: 110.0,
                   height: 110.0,
-                  point: latlng.LatLng(locationData?.latitude ?? 51.5,
-                      locationData?.longitude ?? -0.09),
+                  point: latlng.LatLng(locationData!.latitude!,
+                      locationData!.longitude!),
                   builder: (ctx) => const Avatar()),
-              spawnBeastie(),
-              spawnBeastie(),
-              spawnBeastie()
+              beastie1.spawnMarker(),
+              beastie2.spawnMarker(),
+              beastie3.spawnMarker()
             ],
           ),
         ],
       );
-    }
-  }
-
-  Marker spawnBeastie() {
-    var random = Random();
-    double longitudeRange = 0.00085;
-    double latitudeRange = 0.00088;
-    int randNum = random.nextInt(2);
-    int sign = 0;
-    if (randNum == 0) {
-      sign = -1;
     } else {
-      sign = 1;
+      return const Center(child: CircularProgressIndicator());
     }
-    double randomLon = sign * (random.nextDouble() * longitudeRange + .00015);
-    double randomLat = sign * (random.nextDouble() * latitudeRange + .00032);
-    debugPrint('($randomLat, $randomLon)');
-    return Marker(
-        width: 40.0,
-        height: 40.0,
-        point: latlng.LatLng((locationData?.latitude ?? 51.5) + randomLat,
-            (locationData?.longitude! ?? -0.09) + randomLon),
-        builder: (ctx) => const Beastie());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Image.asset(logoImage, height: 40),
-        automaticallyImplyLeading: false
-        ),
+          centerTitle: true,
+          title: Image.asset(logoImage, height: 40),
+          automaticallyImplyLeading: false),
       body: Center(
-          child: Stack(children: [
-        map(context),
-        IgnorePointer(child: buildCompass())
-      ])),
+          child: Stack(
+              children: [map(context), IgnorePointer(child: buildCompass())])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
