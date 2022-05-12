@@ -1,4 +1,3 @@
-import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -52,48 +51,62 @@ class _MapViewScreenState extends State<MapViewScreen> {
       }
 
       locationData = await locationService.getLocation();
-
     } on PlatformException catch (e) {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
-    locationData = await locationService.getLocation();
     setState(() {});
   }
 
   Widget map(BuildContext context) {
+    MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
     } else {
-      return FlutterMap(
-        options: MapOptions(
-          center: latlng.LatLng(
-              locationData?.latitude ?? 51.5, locationData?.longitude ?? -0.09),
-          zoom: 18.0,
-          interactiveFlags: InteractiveFlag.none,
-        ),
-        layers: [
-          TileLayerOptions(
-              urlTemplate: mapboxURL, // ignore: undefined_identifier
-              attributionBuilder: (_) {
-                return const Text("© Mapbox");
-              },
-              additionalOptions: {
-                'accessToken': mapboxAPIKey, // ignore: undefined_identifier
-                'id': 'mapbox.mapbox-streets-v8'
-              }),
-          MarkerLayerOptions(
-            markers: [
-              Marker(
-                  width: 40.0,
-                  height: 40.0,
-                  point: latlng.LatLng(locationData?.latitude ?? 51.5,
-                      locationData?.longitude ?? -0.09),
-                  builder: (ctx) => const Beastie())
-            ],
-          ),
-        ],
-      );
+      return StreamBuilder(
+          stream: locationService.onLocationChanged.asBroadcastStream(),
+          builder: (context, AsyncSnapshot<LocationData> currLocation) {
+            if (!currLocation.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            latlng.LatLng mapCenter = latlng.LatLng(
+                currLocation.data?.latitude ?? 51.5,
+                currLocation.data?.longitude ?? -0.09);
+            const zoomLevel = 18.0;
+            mapController.onReady.then((_) {
+              mapController.move(mapCenter, zoomLevel);
+            });
+            return FlutterMap(
+              mapController: mapController,
+              options: MapOptions(
+                zoom: zoomLevel,
+                interactiveFlags: InteractiveFlag.none,
+              ),
+              layers: [
+                TileLayerOptions(
+                    urlTemplate: mapboxURL, // ignore: undefined_identifier
+                    attributionBuilder: (_) {
+                      return const Text("© Mapbox");
+                    },
+                    additionalOptions: {
+                      'accessToken':
+                          mapboxAPIKey, // ignore: undefined_identifier
+                      'id': 'mapbox.mapbox-streets-v8'
+                    }),
+                MarkerLayerOptions(
+                  markers: [
+                    Marker(
+                        width: 40.0,
+                        height: 40.0,
+                        point: latlng.LatLng(
+                            currLocation.data?.latitude ?? 51.5,
+                            currLocation.data?.longitude ?? -0.09),
+                        builder: (ctx) => const Beastie())
+                  ],
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -101,15 +114,12 @@ class _MapViewScreenState extends State<MapViewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Image.asset(logoImage, height: 40),
-        automaticallyImplyLeading: false
-        ),
+          centerTitle: true,
+          title: Image.asset(logoImage, height: 40),
+          automaticallyImplyLeading: false),
       body: Center(
-          child: Stack(children: [
-        map(context),
-        IgnorePointer(child: buildCompass())
-      ])),
+          child: Stack(
+              children: [map(context), IgnorePointer(child: buildCompass())])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
         onPressed: () =>

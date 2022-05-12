@@ -21,7 +21,6 @@ dependencies:
   firebase_database: ^9.0.12
   animated_text_kit: ^4.2.1
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
