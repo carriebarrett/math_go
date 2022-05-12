@@ -63,6 +63,7 @@ class _BattleScreenState extends State<BattleScreen> {
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
+                      textAlign: TextAlign.center,
                       controller: _textEditingController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -76,13 +77,28 @@ class _BattleScreenState extends State<BattleScreen> {
                   ],
                 )),
             actions: <Widget>[
-              TextButton(
-                child: const Text('Enter'),
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.of(context).pop();
-                  }
-                },
+              Row(
+                children: [
+                  TextButton(
+                    child: const Text('Exit battle',
+                        style: TextStyle(color: Colors.red)),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('Fleeing the battle!'),
+                      ));
+                      Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                    },
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    child: const Text('Enter'),
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  )
+                ],
               ),
             ],
           );
