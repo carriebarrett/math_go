@@ -15,11 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //Checks if a user is currently logged in.
   bool _isDisabled() {
-    if (FirebaseAuth.instance.currentUser == null) {
-      return true;
-    } else {
-      return false;
-    }
+    return FirebaseAuth.instance.currentUser == null;
   }
 
   Future<UserCredential> signInWithGoogle() async {
