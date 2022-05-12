@@ -28,7 +28,7 @@ class Beastie extends StatelessWidget {
         height: 40.0,
         point: latlng.LatLng((locationData?.latitude)! + randomLat,
             (locationData?.longitude)! + randomLon),
-        builder: (ctx) => Beastie(locationData: locationData,));
+        builder: (ctx) => this);
   }
 
   @override
