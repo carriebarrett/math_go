@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:math_go/screens/map_view.dart';
+import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart';
+import 'package:vector_math/vector_math_64.dart' as vector;
 
 import '../constants.dart';
 
@@ -15,6 +17,7 @@ class BattleScreen extends StatefulWidget {
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
+  late ArCoreController arCoreController;
 
   @override
   void initState() {
@@ -27,6 +30,10 @@ class _BattleScreenState extends State<BattleScreen> {
       content: Text('The beastie got away!'),
     ));
     Navigator.of(context).pushNamed(MapViewScreen.routeName);
+  }
+
+  void _onArCoreViewCreated(ArCoreController controller) {
+    arCoreController = controller;
   }
 
   Future<void> showQuestion(BuildContext context) async {
@@ -110,7 +117,11 @@ class _BattleScreenState extends State<BattleScreen> {
     return Scaffold(
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
-      body: Center(
+      body: ArCoreView(
+        onArCoreViewCreated: _onArCoreViewCreated,
+      ),
+
+      /*Center(
         child: TextButton(
             onPressed: () async {
               await showQuestion(context);
@@ -118,7 +129,9 @@ class _BattleScreenState extends State<BattleScreen> {
             child: const Text(
               'Show Question',
             )),
-      ),
+      ),*/
     );
   }
 }
+
+

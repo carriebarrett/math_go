@@ -20,6 +20,7 @@ dependencies:
   flutter_compass: ^0.7.0
   firebase_database: ^9.0.12
   animated_text_kit: ^4.2.1
+  arcore_flutter_plugin: ^0.0.2+1
 
 dev_dependencies:
   flutter_test:
