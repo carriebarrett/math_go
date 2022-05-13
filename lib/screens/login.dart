@@ -1,9 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:math_go/screens/map_view.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:math_go/screens/tutorial.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  //Checks if a user is currently logged in.
+  bool _isDisabled() {
+    return FirebaseAuth.instance.currentUser == null;
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //Ensures that buttons are greyed out if user is not logged in.
+    _isDisabled();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +58,17 @@ class LoginScreen extends StatelessWidget {
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(
               width: 200,
-              height: 200,
-              child: Image.asset("assets/images/logos_and_icons/logoshrink.png")),
+              height: 125,
+              child:
+                  Image.asset("assets/images/logos_and_icons/logoshrink.png")),
           ElevatedButton(
               style: style,
-              onPressed: () {
-                Navigator.of(context).pushNamed(MapViewScreen.routeName);
-                // Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //         builder: (context) => const MapViewScreen()));
-              },
+              //Button is disabled if user is not logged in.
+              onPressed: _isDisabled()
+                  ? null
+                  : () {
+                      Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                    },
               child: const Text("Existing Account")),
           const SizedBox(
             width: 25,
@@ -38,8 +76,30 @@ class LoginScreen extends StatelessWidget {
           ),
           ElevatedButton(
               style: style,
-              onPressed: null,
-              child: const Text("Sign in using Google"))
+              onPressed: () async {
+                await signInWithGoogle();
+                Navigator.of(context).pushNamed(Tutorial.routeName);
+                setState(() {
+                  _isDisabled();
+                });
+              },
+              child: const Text("Sign in using Google")),
+          const SizedBox(
+            width: 25,
+            height: 25,
+          ),
+          ElevatedButton(
+              style: style,
+              onPressed: _isDisabled()
+                  ? null
+                  : () async {
+                      await GoogleSignIn().signOut();
+                      await FirebaseAuth.instance.signOut();
+                      setState(() {
+                        _isDisabled();
+                      });
+                    },
+              child: const Text("Sign out"))
         ]));
   }
 }
