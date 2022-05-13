@@ -1,75 +1,20 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
+import 'package:math_go/database/beastie_collection_model.dart';
+import 'package:math_go/database/beastie_model.dart';
 
-class BeastieCollection extends StatelessWidget {
-  BeastieCollection({Key? key}) : super(key: key);
-  final database = FirebaseDatabase.instance.ref();
+class BeastieStreamPub {
+  final _database = FirebaseDatabase.instance.ref();
 
-  // Need user Auth ID
-  String get userID => '1';
-
-  @override
-  Widget build(BuildContext context) {
-    final setStream = database.child('/users/' + userID + '/beastieCollection');
-
-    // Examples of beasties added to collection
-    setStream.set({
-      'beastieID': 1,
-      'name': 'blob1',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
+  // This will return the entire collection of all users beastie collections and data
+  Stream<List<Beastie>> getCollectionStream() {
+    final beastieStream = _database.child('/AllBeasties').onValue;
+    final results = beastieStream.map((event) {
+      final beastieMap = Map<String, dynamic>.from(event.snapshot.value);
+      final beastieList = beastieMap.entries.map((e) {
+        return Beastie.fromMap(Map<String, dynamic>.from(e.value));
+      }).toList();
+      return beastieList;
     });
-
-    setStream.set({
-      'beastieID': 2,
-      'name': 'blob2',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-
-    setStream.set({
-      'beastieID': 3,
-      'name': 'blob3',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 4,
-      'name': 'blob4',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 5,
-      'name': 'blob5',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 6,
-      'name': 'blob6',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 7,
-      'name': 'blob7',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 8,
-      'name': 'blob8',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-    setStream.set({
-      'beastieID': 9,
-      'name': 'blob9',
-      'filename': './assets/images/beasties/leaf7.png',
-      'type': 'Blob'
-    });
-
-    return BeastieCollection();
+    return results;
   }
 }
