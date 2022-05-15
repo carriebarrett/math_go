@@ -10,24 +10,28 @@ import '../screens/battle.dart';
 
 class Beastie extends StatelessWidget {
   final LocationData? locationData;
-  const Beastie({Key? key, required this.locationData}) : super(key: key);
+  Beastie({Key? key, required this.locationData}) : super(key: key);
+    
+  var random = Random();
+  double longitudeRange = 0.00085;
+  double latitudeRange = 0.00088;
+  double horizAvatarPad = .00015;
+  double vertAvatarPad = .00032;
+  int randNum = random.nextInt(2);
+  int sign = randNum == 0 ? -1 : 1;
+  double randomLon =
+      sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
+  double randomLat =
+      sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
+  debugPrint('($randomLat, $randomLon)');
+  double beastieLatitude = (locationData?.latitude)! + randomLat;
+  double beastieLongitude = (locationData?.longitude)! + randomLon;
 
   Marker spawnMarker() {
-    var random = Random();
-    double longitudeRange = 0.00085;
-    double latitudeRange = 0.00088;
-    double horizAvatarPad = .00015;
-    double vertAvatarPad = .00032;
-    int randNum = random.nextInt(2);
-    int sign = randNum == 0 ? -1 : 1;
-    double randomLon = sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
-    double randomLat = sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
-    debugPrint('($randomLat, $randomLon)');
     return Marker(
         width: 40.0,
         height: 40.0,
-        point: latlng.LatLng((locationData?.latitude)! + randomLat,
-            (locationData?.longitude)! + randomLon),
+        point: latlng.LatLng(beastieLatitude, beastieLongitude),
         builder: (ctx) => this);
   }
 
