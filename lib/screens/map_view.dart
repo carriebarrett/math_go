@@ -70,8 +70,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             latlng.LatLng mapCenter = latlng.LatLng(
-                currLocation.data?.latitude ?? 51.5,
-                currLocation.data?.longitude ?? -0.09);
+                currLocation.data!.latitude!,
+                currLocation.data!.longitude!);
             const zoomLevel = 18.0;
             mapController.onReady.then((_) {
               mapController.move(mapCenter, zoomLevel);
@@ -99,9 +99,16 @@ class _MapViewScreenState extends State<MapViewScreen> {
                         width: 40.0,
                         height: 40.0,
                         point: latlng.LatLng(
-                            currLocation.data?.latitude ?? 51.5,
-                            currLocation.data?.longitude ?? -0.09),
-                        builder: (ctx) => const Beastie())
+                            currLocation.data!.latitude! + .0002, // these numbers are just for the placeholder beasite location until randomization is fixed
+                            currLocation.data!.longitude! + .0004),
+                        builder: (ctx) => const Beastie()),
+                    Marker(
+                        width: 110.0,
+                        height: 110.0,
+                        point: latlng.LatLng(
+                            currLocation.data!.latitude!,
+                            currLocation.data!.longitude!),
+                        builder: (ctx) => const Avatar())
                   ],
                 ),
               ],
