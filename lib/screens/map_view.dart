@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:math_go/.mapbox_credentials.dart'; // ignore: uri_does_not_exist
 
+import '../widgets/avatar.dart';
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
@@ -70,8 +71,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             latlng.LatLng mapCenter = latlng.LatLng(
-                currLocation.data!.latitude!,
-                currLocation.data!.longitude!);
+                currLocation.data!.latitude!, currLocation.data!.longitude!);
             const zoomLevel = 18.0;
             mapController.onReady.then((_) {
               mapController.move(mapCenter, zoomLevel);
@@ -99,14 +99,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
                         width: 40.0,
                         height: 40.0,
                         point: latlng.LatLng(
-                            currLocation.data!.latitude! + .0002, // these numbers are just for the placeholder beasite location until randomization is fixed
+                            currLocation.data!.latitude! +
+                                .0002, // these numbers are just for the placeholder beasite location until randomization is fixed
                             currLocation.data!.longitude! + .0004),
                         builder: (ctx) => const Beastie()),
                     Marker(
                         width: 110.0,
                         height: 110.0,
-                        point: latlng.LatLng(
-                            currLocation.data!.latitude!,
+                        point: latlng.LatLng(currLocation.data!.latitude!,
                             currLocation.data!.longitude!),
                         builder: (ctx) => const Avatar())
                   ],
