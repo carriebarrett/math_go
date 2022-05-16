@@ -12,20 +12,20 @@ class Beastie extends StatelessWidget {
   final LocationData? locationData;
   Beastie({Key? key, required this.locationData}) : super(key: key);
     
-  var random = Random();
-  double longitudeRange = 0.00085;
-  double latitudeRange = 0.00088;
-  double horizAvatarPad = .00015;
-  double vertAvatarPad = .00032;
-  int randNum = random.nextInt(2);
-  int sign = randNum == 0 ? -1 : 1;
-  double randomLon =
+  final random = Random();
+  final double longitudeRange = 0.00085;
+  final double latitudeRange = 0.00088;
+  final double horizAvatarPad = .00015;
+  final double vertAvatarPad = .00032;
+  late final int randNum = random.nextInt(2);
+  late final int sign = randNum == 0 ? -1 : 1;
+  late final double randomLon =
       sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
-  double randomLat =
+  late final double randomLat =
       sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
-  debugPrint('($randomLat, $randomLon)');
-  double beastieLatitude = (locationData?.latitude)! + randomLat;
-  double beastieLongitude = (locationData?.longitude)! + randomLon;
+  // debugPrint('($randomLat, $randomLon)');
+  late final double beastieLatitude = (locationData?.latitude)! + randomLat;
+  late final double beastieLongitude = (locationData?.longitude)! + randomLon;
 
   Marker spawnMarker() {
     return Marker(
