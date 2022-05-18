@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 
-import '../.mapbox_credentials.dart';
 import '../widgets/avatar.dart';
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
