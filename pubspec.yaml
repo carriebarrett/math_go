@@ -20,6 +20,7 @@ dependencies:
   flutter_compass: ^0.7.0
   firebase_database: ^9.0.12
   animated_text_kit: ^4.2.1
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -37,6 +38,7 @@ flutter:
     - assets/images/
     - assets/images/beasties/
     - assets/images/logos_and_icons/
+    - assets/.env
   uses-material-design: true
 
   # To add custom fonts to your application, add a fonts section here,

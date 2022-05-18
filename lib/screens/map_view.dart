@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -88,13 +89,12 @@ class _MapViewScreenState extends State<MapViewScreen> {
               ),
               layers: [
                 TileLayerOptions(
-                    urlTemplate: mapboxURL, // ignore: undefined_identifier
+                    urlTemplate: dotenv.env['MAPBOX_URL'],
                     attributionBuilder: (_) {
                       return const Text("© Mapbox");
                     },
                     additionalOptions: {
-                      'accessToken':
-                          mapboxAPIKey, // ignore: undefined_identifier
+                      'accessToken': dotenv.env['MAPBOX_API_KEY']!,
                       'id': 'mapbox.mapbox-streets-v8'
                     }),
                 MarkerLayerOptions(

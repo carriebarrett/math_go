@@ -19,14 +19,18 @@ jobs:
         uses: subosito/flutter-action@v2.4.0
         with:
           flutter-version: "2.10.3"
-          dart-version: ">=2.16.1 <3.0.0"
+
+      - name: Add temp env file
+        run: |
+          touch assets/.env
+          echo MAPBOX_URL = '' >> assets/.env
+          echo MAPBOX_API_KEY = '' >> assets/.env
 
       - name: Restore packages
         run: flutter pub get
 
       - name: Analyze
         run: flutter analyze
-# Temporarily removing this since we need to figure out how to avoid the
-# mapbox credentials file missing in the github environment
-# - name: Run tests
-#   run: flutter test
+
+      - name: Run tests
+        run: flutter test
