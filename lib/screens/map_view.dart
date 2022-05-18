@@ -1,10 +1,11 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../widgets/avatar.dart';
 import '../widgets/beastie.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
@@ -59,6 +60,9 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   Widget map(BuildContext context) {
+    Beastie beastie1 = Beastie(locationData: locationData);
+    Beastie beastie2 = Beastie(locationData: locationData);
+    Beastie beastie3 = Beastie(locationData: locationData);
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
@@ -70,8 +74,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             latlng.LatLng mapCenter = latlng.LatLng(
-                currLocation.data?.latitude ?? 51.5,
-                currLocation.data?.longitude ?? -0.09);
+                currLocation.data!.latitude!,
+                currLocation.data!.longitude!);
             const zoomLevel = 18.0;
             mapController.onReady.then((_) {
               mapController.move(mapCenter, zoomLevel);
@@ -95,12 +99,15 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 MarkerLayerOptions(
                   markers: [
                     Marker(
-                        width: 40.0,
-                        height: 40.0,
+                        width: 110.0,
+                        height: 110.0,
                         point: latlng.LatLng(
-                            currLocation.data?.latitude ?? 51.5,
-                            currLocation.data?.longitude ?? -0.09),
-                        builder: (ctx) => const Beastie())
+                            currLocation.data!.latitude!,
+                            currLocation.data!.longitude!),
+                        builder: (ctx) => const Avatar()),
+                    beastie1.spawnMarker(),
+                    beastie2.spawnMarker(),
+                    beastie3.spawnMarker()
                   ],
                 ),
               ],
