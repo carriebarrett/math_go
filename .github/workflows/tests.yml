@@ -23,8 +23,7 @@ jobs:
       - name: Add temp env file
         run: |
           touch assets/.env
-          echo MAPBOX_URL = '' >> assets/.env
-          echo MAPBOX_API_KEY = '' >> assets/.env
+          cp assets/.env.sample assets/.env
 
       - name: Restore packages
         run: flutter pub get
