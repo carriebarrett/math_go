@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "131155449813",
+    "firebase_url": "https://math-go-a907e-default-rtdb.firebaseio.com",
     "project_id": "math-go-a907e",
     "storage_bucket": "math-go-a907e.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "131155449813-46qo1oq7g9alcda89sa2ro08caftat2h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.math_go",
+            "certificate_hash": "9a1e21c419cba63e9066914770701cb1c17843d6"
+          }
+        },
         {
           "client_id": "131155449813-4dn2qc44difr9qjh5hcv9sggv8amqpb7.apps.googleusercontent.com",
           "client_type": 1,
