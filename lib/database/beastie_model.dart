@@ -13,7 +13,7 @@ class Beastie {
       required this.type,
       required this.question,
       required this.answer});
-  factory Beastie.fromMap(Map<String, dynamic> data) {
+  factory Beastie.fromMap(Map<dynamic, dynamic> data) {
     return Beastie(
         beastieID: data['beastieID'] ?? 1,
         name: data['name'] ?? 'blob1',

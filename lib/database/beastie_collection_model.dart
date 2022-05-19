@@ -11,7 +11,7 @@ class BeastieCollection {
       required this.beastieName,
       required this.imagePath,
       required this.type});
-  factory BeastieCollection.fromMap(Map<String, dynamic> data) {
+  factory BeastieCollection.fromMap(Map<dynamic, dynamic> data) {
     return BeastieCollection(
         beastieCollectionID: data['beastieCollectionID'] ?? '',
         beastieID: data['beastieID'] ?? 1,
