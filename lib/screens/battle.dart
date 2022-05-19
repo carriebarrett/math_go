@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:math_go/screens/map_view.dart';
 
 import '../constants.dart';
+import 'map_view.dart';
 
 class BattleScreen extends StatefulWidget {
   const BattleScreen({Key? key, required this.title}) : super(key: key);
