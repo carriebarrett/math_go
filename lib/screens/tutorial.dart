@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class Tutorial extends StatefulWidget {
   const Tutorial({Key? key, required this.title}) : super(key: key);
