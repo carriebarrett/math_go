@@ -130,7 +130,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () =>
             {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.collections_bookmark),
       ),
     );
   }
