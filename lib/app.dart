@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:math_go/screens/battle.dart';
-import 'package:math_go/screens/home.dart';
 import 'package:math_go/screens/map_view.dart';
 import 'package:math_go/screens/collection.dart';
 import 'package:math_go/screens/tutorial.dart';
@@ -13,7 +12,6 @@ class MyApp extends StatelessWidget {
 
   final _routes = {
     MapViewScreen.routeName: (context) => MapViewScreen(title: appTitle),
-    HomeScreen.routeName: (context) => HomeScreen(title: appTitle),
     BattleScreen.routeName: (context) => BattleScreen(title: appTitle),
     CollectionScreen.routeName: (context) => CollectionScreen(title: appTitle),
     Tutorial.routeName: (context) => Tutorial(title: appTitle)
