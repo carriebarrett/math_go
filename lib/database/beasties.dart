@@ -1,18 +1,27 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:math_go/database/beastie_model.dart';
+import 'package:math_go/models/beastie_model.dart';
 
-class BeastieStreamPub {
+class BeastiesData {
   final _database = FirebaseDatabase.instance.ref();
 
-  final List<Beastie> list = [];
+  final List<Beastie> beasties = [];
 
-  // This will return the entire collection of all users beastie collections and data
-  getCollection() async {
-    final beastieStream = await _database.child('/AllBeasties').get();
-    final map = beastieStream.value as Map<dynamic, dynamic>;
-    map.forEach((key, value) {
-      final beastie = Beastie.fromMap(value);
-      list.add(beastie);
-    });
+  // This will return all beasties
+  Future<List<Beastie>> getBeasties() async {
+    DataSnapshot collectionSnapshot = await getSnapshot();
+    (collectionSnapshot.value as List<Object?>?)?.forEach(makeBeastie);
+    return beasties;
+  }
+
+  void makeBeastie(value) {
+    if (value == null) {
+      return;
+    }
+    final beastie = Beastie.fromMap(value);
+    beasties.add(beastie);
+  }
+
+  Future<DataSnapshot> getSnapshot() async {
+    return await _database.child('/AllBeasties').get();
   }
 }

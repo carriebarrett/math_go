@@ -4,7 +4,7 @@ class Beastie {
   final String imagePath;
   final String type;
   final String question;
-  final String answer;
+  final dynamic answer;
 
   Beastie(
       {required this.beastieID,
@@ -21,6 +21,6 @@ class Beastie {
         imagePath: data['imagePath'] ?? './assets/images/beasties/leaf7.png',
         type: data['type'] ?? 'Blob',
         question: data['Question'] ?? '2 + 2',
-        answer: data['Answer'] ?? '4');
+        answer: data['Answer'] ?? 4);
   }
 }
