@@ -1,48 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:math_go/models/text.dart';
 import 'package:math_go/screens/map_view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-//Contains the box holding screencaptures that are displayed during tutorial
-//Initially the widget is created to take up whitespace until an asset file is provided
-Widget spaceHolder(BuildContext context, String asset) {
-  if (asset == "") {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.40,
-        decoration: null,
-        alignment: Alignment.center,
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.height * 0.15,
-            child: null));
-  } else {
-    return Container(
-        width: MediaQuery.of(context).size.width * 0.40,
-        decoration:
-            BoxDecoration(border: Border.all(width: 2.0, color: Colors.black)),
-        alignment: Alignment.center,
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width * 0.75,
-            height: MediaQuery.of(context).size.height * 0.15,
-            child: Image.asset(asset)));
+User? user = FirebaseAuth.instance.currentUser;
+
+var tutorials = [
+  {
+    "prompt":
+        '''Welcome to the world of Math Go, ${user!.displayName!}. This is a brief tutorial to help you get acclimated to the world around you. Click on this chat bubble when you are ready to proceed.''',
+    "asset": ""
+  },
+  {
+    "prompt":
+        '''The game map will display your current position and any beasties nearby. If you tap a beastie, you will be prompted for a question. Answer it correctly, and the beastie is yours!. Be warned, if you input the wrong answer, the beastie will flee!''',
+    "asset": "assets/images/logos_and_icons/sample_map.png"
+  },
+  {
+    "prompt": '''That's all there is to it! Good luck and have fun!''',
+    "asset": "assets/images/logos_and_icons/question.png"
   }
-}
-
-//Contains the animated text, currentString changes with each onTap.
-Widget customText(String currentString) {
-  return AnimatedTextKit(
-      animatedTexts: [TypewriterAnimatedText(currentString)],
-      isRepeatingAnimation: false);
-}
+];
 
 class Tutorial extends StatefulWidget {
-  Tutorial({Key? key, required this.title}) : super(key: key);
+  const Tutorial({Key? key, required this.title}) : super(key: key);
 
   final String title;
   //Each prompt represents a new animated text bubble
-  final String firstPrompt = tutorialText["firstScreen"]!;
-  final String secondPrompt = tutorialText["secondScreen"]!;
-  final String thirdPrompt = tutorialText["thirdScreen"]!;
+  //final String firstPrompt = tutorials["firstScreen"]!;
+  //final String secondPrompt = tutorials["secondScreen"]!;
+  //final String thirdPrompt = tutorials["thirdScreen"]!;
   static const routeName = "Tutorial";
 
   @override
@@ -60,7 +47,30 @@ class _TutorialState extends State<Tutorial> {
   @override
   void initState() {
     super.initState();
-    currentString = widget.firstPrompt;
+    currentString = tutorials[screenCounter]['prompt']!;
+  }
+
+  //Contains the box holding screencaptures that are displayed during tutorial
+  //Initially the widget is created to take up whitespace until an asset file is provided
+  Widget imageContainer(BuildContext context, String asset) {
+    return Container(
+        width: MediaQuery.of(context).size.width * 0.40,
+        decoration: asset == ""
+            ? null
+            : BoxDecoration(
+                border: Border.all(width: 2.0, color: Colors.black)),
+        alignment: Alignment.center,
+        child: SizedBox(
+            width: MediaQuery.of(context).size.width * 0.75,
+            height: MediaQuery.of(context).size.height * 0.15,
+            child: asset == "" ? null : Image.asset(asset)));
+  }
+
+  //Contains the animated text, currentString changes with each onTap.
+  Widget customText(String currentString) {
+    return AnimatedTextKit(
+        animatedTexts: [TypewriterAnimatedText(currentString)],
+        isRepeatingAnimation: false);
   }
 
   @override
@@ -79,7 +89,7 @@ class _TutorialState extends State<Tutorial> {
               bottom: MediaQuery.of(context).size.height * 0.25),
           child: Column(
             children: [
-              spaceHolder(context, asset),
+              imageContainer(context, asset),
               const Padding(padding: EdgeInsets.only(bottom: 30)),
               Row(
                 children: [
@@ -102,17 +112,11 @@ class _TutorialState extends State<Tutorial> {
                         if (screenCounter == 3) {
                           Navigator.of(context)
                               .pushNamed(MapViewScreen.routeName);
+                          return; //Prevents invoking setState when routing.
                         }
                         setState(() {
-                          if (screenCounter == 1) {
-                            currentString = widget.secondPrompt;
-                            asset =
-                                "assets/images/logos_and_icons/sample_map.png";
-                          } else if (screenCounter == 2) {
-                            currentString = widget.thirdPrompt;
-                            asset =
-                                "assets/images/logos_and_icons/question.png";
-                          }
+                          currentString = tutorials[screenCounter]['prompt']!;
+                          asset = tutorials[screenCounter]['asset']!;
                         });
                       },
                       child: Container(
