@@ -26,10 +26,6 @@ class Tutorial extends StatefulWidget {
   const Tutorial({Key? key, required this.title}) : super(key: key);
 
   final String title;
-  //Each prompt represents a new animated text bubble
-  //final String firstPrompt = tutorials["firstScreen"]!;
-  //final String secondPrompt = tutorials["secondScreen"]!;
-  //final String thirdPrompt = tutorials["thirdScreen"]!;
   static const routeName = "Tutorial";
 
   @override
