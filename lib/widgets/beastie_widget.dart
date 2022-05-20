@@ -5,12 +5,15 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
+import 'package:math_go/constants.dart';
+//import 'package:math_go/database/beasties.dart';
 
+import '../models/beastie_model.dart';
 import '../screens/battle.dart';
 
-class Beastie extends StatelessWidget {
+class BeastieWidget extends StatelessWidget {
   final LocationData? locationData;
-  Beastie({Key? key, required this.locationData}) : super(key: key);
+  BeastieWidget({Key? key, required this.locationData}) : super(key: key);
 
   final random = Random();
   final double longitudeRange = 0.00085;
@@ -30,6 +33,27 @@ class Beastie extends StatelessWidget {
   late final double vertDistToAvatar =
       beastieLongitude - (locationData?.longitude)!;
 
+  // final BeastiesData beastiesData = BeastiesData();
+  // late final List<Beastie> allBeastieList = beastiesData.beasties;
+  late final List<Beastie> allBeastieList = [
+    Beastie(
+        beastieID: 1,
+        question: '1+1',
+        answer: '2',
+        imagePath: 'assets/images/beasties/blob1.png',
+        name: 'blob1',
+        type: 'math'),
+    Beastie(
+        beastieID: 2,
+        question: '2+2',
+        answer: '4',
+        imagePath: 'assets/images/beasties/leaf1.png',
+        name: 'leaf1',
+        type: 'math')
+  ];
+  late final Beastie randomBeastie =
+      allBeastieList[random.nextInt(allBeastieList.length)];
+
   Marker spawnMarker() {
     return Marker(
         width: 40.0,
@@ -44,12 +68,10 @@ class Beastie extends StatelessWidget {
         builder: (context) {
           return AlertDialog(
             content: const Text('Move closer to capture that beastie!'),
-                
             actions: <Widget>[
               TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK')
-              )
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'))
             ],
           );
         });
@@ -59,14 +81,17 @@ class Beastie extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if ((horizDistToAvatar.abs() < latitudeRange / 2) &&
-            vertDistToAvatar.abs() < longitudeRange / 2) {
-          Navigator.of(context).pushNamed(BattleScreen.routeName);
+        if ((horizDistToAvatar.abs() < latitudeRange * .9) &&
+            vertDistToAvatar.abs() < longitudeRange * .9) {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder:(context) => BattleScreen(title: appTitle, beastie: randomBeastie)));
         } else {
           await tooFarPopup(context);
         }
       },
-      child: Image.asset('assets/images/beasties/blob1.png'),
+      child: Image.asset(randomBeastie.imagePath),
     );
   }
 }
+

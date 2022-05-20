@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:math_go/screens/battle.dart';
-import 'package:math_go/screens/map_view.dart';
-import 'package:math_go/screens/collection.dart';
-import 'package:math_go/screens/tutorial.dart';
 
 import 'constants.dart';
 import 'screens/battle.dart';
@@ -16,7 +12,7 @@ class MyApp extends StatelessWidget {
 
   final _routes = {
     MapViewScreen.routeName: (context) => const MapViewScreen(title: appTitle),
-    BattleScreen.routeName: (context) => const BattleScreen(title: appTitle),
+    BattleScreen.routeName: (context) => BattleScreen(title: appTitle, beastie: emptyBeastie),
     CollectionScreen.routeName: (context) => const CollectionScreen(title: appTitle),
     Tutorial.routeName: (context) => const Tutorial(title: appTitle)
   };

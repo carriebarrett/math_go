@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 
 import '../widgets/avatar.dart';
-import '../widgets/beastie.dart';
+import '../widgets/beastie_widget.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
 import './collection.dart';
@@ -27,9 +27,9 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   late Avatar myAvatar = Avatar(locationData: locationData);
 
-  late Beastie beastie1 = Beastie(locationData: locationData);
-  late Beastie beastie2 = Beastie(locationData: locationData);
-  late Beastie beastie3 = Beastie(locationData: locationData);
+  late BeastieWidget beastie1 = BeastieWidget(locationData: locationData);
+  late BeastieWidget beastie2 = BeastieWidget(locationData: locationData);
+  late BeastieWidget beastie3 = BeastieWidget(locationData: locationData);
 
   List<Marker> markers = [];
 
@@ -76,7 +76,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   Widget map(BuildContext context, List<Marker> markers) {
     MapControllerImpl mapController = MapControllerImpl();
     if (markers.length < 5 && locationData != null) {
-      Beastie newBeastie = Beastie(locationData: locationData);
+      BeastieWidget newBeastie = BeastieWidget(locationData: locationData);
       markers.add(newBeastie.spawnMarker());
     }
     if (locationData == null) {
