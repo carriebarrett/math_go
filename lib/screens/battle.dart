@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'package:math_go/db/answer_dto.dart';
+import 'package:math_go/database/answer_dto.dart';
 import 'package:math_go/screens/map_view.dart';
 
 import '../constants.dart';
@@ -44,7 +44,11 @@ class _BattleScreenState extends State<BattleScreen> {
 
 // placeholder function to add the beastie to the db
   void addBeastieToCollection() {
-    return;
+    // print(widget.beastieCollection);
+    // BeastieCollectionsData().updateCollection(
+    //     widget.beastieCollection?.beastieCollectionID,
+    //     widget.beastieCollection?.beastiesIds,
+    //     "4");
   }
 
   Future<void> showQuestion(BuildContext context) async {

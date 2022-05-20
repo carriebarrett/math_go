@@ -18,4 +18,11 @@ class BeastieCollectionsData {
   Future<DataSnapshot> getSnapshot() async {
     return await _database.child('/BeastieCollection').get();
   }
+
+  Future<void> updateCollection(id, oldBeastieIds, newBeastieId) async {
+    final Map<String, Object?> updates = {
+      "beastieIDs": [...oldBeastieIds, newBeastieId].toString()
+    };
+    return await _database.child('/BeastieCollection/$id').update(updates);
+  }
 }

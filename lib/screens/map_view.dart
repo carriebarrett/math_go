@@ -6,6 +6,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
+import 'package:math_go/database/beastie_collection.dart';
+import 'package:math_go/models/beastie_collection_model.dart';
 
 import '../widgets/avatar.dart';
 import '../widgets/beastie_widget.dart';
@@ -76,7 +78,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
     }
   }
 
-  Widget map(BuildContext context) {
+  Widget map(BuildContext context, String? collectionId) {
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
@@ -103,13 +105,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
                             beastie: allBeastieList[
                                 random.nextInt(allBeastieList.length)])
                         .spawnMarker());
-                    debugPrint(beastieMarkers.length.toString());
                   }
                   mapController.onReady.then((_) {
                     mapController.move(mapCenter, zoomLevel);
                     removeOutOfBoundsBeasties(beastieMarkers, mapController);
                   });
-
                   return FlutterMap(
                     mapController: mapController,
                     options: MapOptions(
@@ -136,23 +136,38 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navigationArgs = (ModalRoute.of(context)!.settings.arguments);
+    final collectionId =
+        (navigationArgs as Map<String, String>)['collectionId'];
     return Scaffold(
-      appBar: AppBar(
-          centerTitle: true,
-          title: Image.asset(logoImage, height: 40),
-          automaticallyImplyLeading: false),
-      body: Center(
-          child: Stack(children: [
-        map(context),
-        const Avatar(),
-        IgnorePointer(child: buildCompass())
-      ])),
-      // borrowed this button temporarily to link to collection screen
-      floatingActionButton: FloatingActionButton(
-        onPressed: () =>
-            {Navigator.of(context).pushNamed(CollectionScreen.routeName)},
-        child: const Icon(Icons.collections_bookmark),
-      ),
-    );
+        appBar: AppBar(
+            centerTitle: true,
+            title: Image.asset(logoImage, height: 40),
+            automaticallyImplyLeading: false),
+        body: Center(
+            child: Stack(children: [
+          map(context, collectionId),
+          const Avatar(),
+          IgnorePointer(child: buildCompass())
+        ])),
+        floatingActionButton: FutureBuilder(
+            future: BeastieCollectionsData().getCollections(),
+            builder: (context, AsyncSnapshot collectionsSnapshot) {
+              if (!collectionsSnapshot.hasData) {
+                return const CircularProgressIndicator();
+              }
+              final BeastieCollection? _beastieCollection =
+                  (collectionsSnapshot.data as List<BeastieCollection>)
+                      .where((collection) =>
+                          collectionId == collection.beastieCollectionID)
+                      .toList()[0];
+              return FloatingActionButton(
+                onPressed: () => {
+                  Navigator.of(context).pushNamed(CollectionScreen.routeName,
+                      arguments: {"usersCollection": _beastieCollection})
+                },
+                child: const Icon(Icons.collections_bookmark),
+              );
+            }));
   }
 }

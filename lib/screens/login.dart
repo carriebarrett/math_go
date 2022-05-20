@@ -87,7 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _isDisabled()
                   ? null
                   : () {
-                      Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                      Navigator.of(context).pushNamed(MapViewScreen.routeName,
+                          arguments: {
+                            'collectionId': 'F7pByf4fiUfGApYkGlOOjez1MW23'
+                          });
                     },
               child: const Text("Existing Account")),
           const SizedBox(

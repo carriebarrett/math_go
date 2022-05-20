@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:math_go/database/beastie_collection.dart';
 import 'package:math_go/database/beasties.dart';
 
 import '../constants.dart';
@@ -38,6 +37,9 @@ class _CollectionScreenState extends State<CollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final navigationArgs = (ModalRoute.of(context)!.settings.arguments);
+    final BeastieCollection? _beastieCollection =
+        (navigationArgs as Map<String, BeastieCollection?>)['usersCollection'];
     return Scaffold(
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
@@ -64,53 +66,36 @@ class _CollectionScreenState extends State<CollectionScreen> {
             child: SizedBox(
               height: 600,
               child: FutureBuilder(
-                  future: BeastieCollectionsData().getCollections(),
+                  future: BeastiesData().getBeasties(),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (!snapshot.hasData) {
                       return const CircularProgressIndicator();
                     }
-                    List<BeastieCollection> allCollections = snapshot.data;
-                    // This should be the collection for the particular user but we can't do
-                    // that just yet.
-                    BeastieCollection _beastieCollection = allCollections[0];
-
-                    return FutureBuilder(
-                        future: BeastiesData().getBeasties(),
-                        builder: (context, AsyncSnapshot snapshot) {
-                          if (!snapshot.hasData) {
-                            return const CircularProgressIndicator();
-                          }
-                          List<Beastie> allBeasties = snapshot.data;
-                          // This doesn't work correctly right now because every beastie
-                          // is missing a beastieId so it's all being assigned 1
-                          // as it's id.
-                          // So it thinks every beastie is a part of the collectedBeasties.
-                          // ignore: unused_local_variable
-                          List<Beastie> collectedBeasties = allBeasties
-                              .takeWhile((beastie) => _beastieCollection
-                                  .beastiesIds
-                                  .contains(beastie.beastieID))
-                              .toList();
-                          return ListView.builder(
-                              itemCount: beasties.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                  child: SizedBox(
-                                    height: 80,
-                                    child: Row(
-                                      children: [
-                                        const SizedBox(width: 20),
-                                        Image.asset(beasties[index].imagePath),
-                                        const SizedBox(width: 50),
-                                        Text(
-                                          beasties[index].name,
-                                          style: const TextStyle(fontSize: 20),
-                                        ),
-                                      ],
-                                    ),
+                    List<Beastie> allBeasties = snapshot.data;
+                    List<Beastie> collectedBeasties = allBeasties
+                        .takeWhile((beastie) => _beastieCollection!.beastiesIds
+                            .contains(beastie.beastieID))
+                        .toList();
+                    return ListView.builder(
+                        itemCount: collectedBeasties.length,
+                        itemBuilder: (context, index) {
+                          return Card(
+                            child: SizedBox(
+                              height: 80,
+                              child: Row(
+                                children: [
+                                  const SizedBox(width: 20),
+                                  Image.asset(
+                                      collectedBeasties[index].imagePath),
+                                  const SizedBox(width: 50),
+                                  Text(
+                                    collectedBeasties[index].name,
+                                    style: const TextStyle(fontSize: 20),
                                   ),
-                                );
-                              });
+                                ],
+                              ),
+                            ),
+                          );
                         });
                   }),
             ),
