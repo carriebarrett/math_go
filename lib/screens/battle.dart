@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:math_go/db/answer_dto.dart';
 import 'package:math_go/screens/map_view.dart';
 
 import '../constants.dart';
@@ -15,6 +16,7 @@ class BattleScreen extends StatefulWidget {
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
+  final AnswerDTO _answerDTO = AnswerDTO();
 
   @override
   void initState() {
@@ -27,6 +29,17 @@ class _BattleScreenState extends State<BattleScreen> {
       content: Text('The beastie got away!'),
     ));
     Navigator.of(context).pushNamed(MapViewScreen.routeName);
+  }
+
+  // This is a placeholder for more complex logic when we have the
+  // actual question from the db
+  bool isCorrectAnswer(answer, expectedResponse) {
+    return answer == expectedResponse;
+  }
+
+// placeholder function to add the beastie to the db
+  void addBeastieToCollection() {
+    return;
   }
 
   Future<void> showQuestion(BuildContext context) async {
@@ -71,6 +84,9 @@ class _BattleScreenState extends State<BattleScreen> {
                         }
                         return null;
                       },
+                      onSaved: (value) {
+                        _answerDTO.answer = value as String;
+                      },
                       decoration:
                           const InputDecoration(hintText: "Enter your answer"),
                     ),
@@ -93,8 +109,27 @@ class _BattleScreenState extends State<BattleScreen> {
                   TextButton(
                     child: const Text('Enter'),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context).pop();
+                      final validatedAnswer = _formKey.currentState!.validate();
+                      if (validatedAnswer) {
+                        _formKey.currentState?.save();
+                        // The answer and beastie name are hardcoded until
+                        // we have data from db
+                        const beastieName = "BEASTIE_NAME_GOES_HERE";
+                        if (isCorrectAnswer(_answerDTO.answer, '5')) {
+                          addBeastieToCollection();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content:
+                                Text('You successfully captured $beastieName'),
+                          ));
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text('$beastieName got away!'),
+                          ));
+                        }
+                        Navigator.of(context)
+                            .pushNamed(MapViewScreen.routeName);
                       }
                     },
                   )
