@@ -12,8 +12,10 @@ class MyApp extends StatelessWidget {
 
   final _routes = {
     MapViewScreen.routeName: (context) => const MapViewScreen(title: appTitle),
-    BattleScreen.routeName: (context) => BattleScreen(title: appTitle, beastie: emptyBeastie),
-    CollectionScreen.routeName: (context) => const CollectionScreen(title: appTitle),
+    BattleScreen.routeName: (context) =>
+        BattleScreen(title: appTitle, beastie: sampleBeastie),
+    CollectionScreen.routeName: (context) =>
+        const CollectionScreen(title: appTitle),
     Tutorial.routeName: (context) => const Tutorial(title: appTitle)
   };
 

@@ -9,7 +9,7 @@ const String logoImage =
 
 const logoColor = Color.fromRGBO(255, 99, 71, 1);
 
-final emptyBeastie = Beastie(
+final sampleBeastie = Beastie(
     beastieID: 1,
     question: '1+1',
     answer: '2',
