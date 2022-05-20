@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:math_go/screens/battle.dart';
+import 'package:math_go/screens/map_view.dart';
+import 'package:math_go/screens/collection.dart';
+import 'package:math_go/screens/tutorial.dart';
 
 import 'constants.dart';
 import 'screens/battle.dart';
