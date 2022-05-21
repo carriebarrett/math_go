@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 
@@ -24,14 +24,6 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
-
-  late Avatar myAvatar = Avatar(locationData: locationData);
-
-  late BeastieWidget beastie1 = BeastieWidget(locationData: locationData);
-  late BeastieWidget beastie2 = BeastieWidget(locationData: locationData);
-  late BeastieWidget beastie3 = BeastieWidget(locationData: locationData);
-
-  List<Marker> markers = [];
 
   @override
   void initState() {
@@ -64,21 +56,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
-    markers = [
-      myAvatar.avatarMarker(),
-      beastie1.spawnMarker(),
-      beastie2.spawnMarker(),
-      beastie3.spawnMarker()
-    ];
     setState(() {});
   }
 
-  Widget map(BuildContext context, List<Marker> markers) {
+  Widget map(BuildContext context) {
+    BeastieWidget beastie1 = BeastieWidget(locationData: locationData);
+    BeastieWidget beastie2 = BeastieWidget(locationData: locationData);
+    BeastieWidget beastie3 = BeastieWidget(locationData: locationData);
     MapControllerImpl mapController = MapControllerImpl();
-    if (markers.length < 5 && locationData != null) {
-      BeastieWidget newBeastie = BeastieWidget(locationData: locationData);
-      markers.add(newBeastie.spawnMarker());
-    }
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
     } else {
@@ -110,7 +95,19 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       'accessToken': dotenv.env['MAPBOX_API_KEY']!,
                       'id': 'mapbox.mapbox-streets-v8'
                     }),
-                MarkerLayerOptions(markers: markers),
+                MarkerLayerOptions(
+                  markers: [
+                    Marker(
+                        width: 110.0,
+                        height: 110.0,
+                        point: latlng.LatLng(currLocation.data!.latitude!,
+                            currLocation.data!.longitude!),
+                        builder: (ctx) => const Avatar()),
+                    beastie1.spawnMarker(),
+                    beastie2.spawnMarker(),
+                    beastie3.spawnMarker()
+                  ],
+                ),
               ],
             );
           });
@@ -125,10 +122,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
           title: Image.asset(logoImage, height: 40),
           automaticallyImplyLeading: false),
       body: Center(
-          child: Stack(children: [
-        map(context, markers),
-        IgnorePointer(child: buildCompass())
-      ])),
+          child: Stack(
+              children: [map(context), IgnorePointer(child: buildCompass())])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
         onPressed: () =>

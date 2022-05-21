@@ -6,7 +6,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:math_go/constants.dart';
-//import 'package:math_go/database/beasties.dart';
+import 'package:math_go/database/beasties.dart';
 
 import '../models/beastie_model.dart';
 import '../screens/battle.dart';
@@ -34,6 +34,7 @@ class BeastieWidget extends StatelessWidget {
       beastieLongitude - (locationData?.longitude)!;
 
   // final BeastiesData beastiesData = BeastiesData();
+  // late final Future<List> beastiesFuture = beastiesData.getBeasties();
   // late final List<Beastie> allBeastieList = beastiesData.beasties;
   late final List<Beastie> allBeastieList = [
     Beastie(
@@ -81,11 +82,16 @@ class BeastieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if ((horizDistToAvatar.abs() < latitudeRange * .9) &&
+        // currLocationData = await locationService.getLocation();
+        if ((horizDistToAvatar.abs() <
+                latitudeRange *
+                    .9) && // need to fix this so it considers UPDATED location, not just initial location
             vertDistToAvatar.abs() < longitudeRange * .9) {
           Navigator.push(
-            context, 
-            MaterialPageRoute(builder:(context) => BattleScreen(title: appTitle, beastie: randomBeastie)));
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      BattleScreen(title: appTitle, beastie: randomBeastie)));
         } else {
           await tooFarPopup(context);
         }
@@ -94,4 +100,3 @@ class BeastieWidget extends StatelessWidget {
     );
   }
 }
-
