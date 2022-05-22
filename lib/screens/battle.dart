@@ -16,12 +16,15 @@ class BattleScreen extends StatefulWidget {
   final String title;
   static const routeName = 'battle';
   @override
-  State<BattleScreen> createState() => _BattleScreenState();
+  State<BattleScreen> createState() => _BattleScreenState(this.beastie);
 }
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
   final AnswerDTO _answerDTO = AnswerDTO();
+  final Beastie beastie;
+
+  _BattleScreenState(this.beastie);
 
   @override
   void initState() {
@@ -73,11 +76,11 @@ class _BattleScreenState extends State<BattleScreen> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    const Text(
-                      '2 + 3 = ?',
+                    Text(
+                      beastie.question,
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -148,16 +151,21 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan[100],
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
       body: Center(
-        child: TextButton(
-            onPressed: () async {
-              await showQuestion(context);
-            },
-            child: const Text(
-              'Show Question',
-            )),
+        child: GestureDetector(
+          onTap: () async {
+            await showQuestion(context);
+          }, // Image tapped
+          child: Image.asset(
+            beastie.imagePath,
+            fit: BoxFit.contain, // Fixes border issues
+            width: 100,
+            height: 100,
+          ),
+        ),
       ),
     );
   }
