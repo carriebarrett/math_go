@@ -16,7 +16,7 @@ class BattleScreen extends StatefulWidget {
   final String title;
   static const routeName = 'battle';
   @override
-  State<BattleScreen> createState() => _BattleScreenState(this.beastie);
+  State<BattleScreen> createState() => _BattleScreenState(beastie);
 }
 
 class _BattleScreenState extends State<BattleScreen> {
