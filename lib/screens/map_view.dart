@@ -6,14 +6,13 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-import 'package:math_go/database/beasties.dart';
-import 'package:math_go/models/beastie_model.dart';
 
 import '../widgets/avatar.dart';
 import '../widgets/beastie_widget.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
 import './collection.dart';
+import '/database/beasties.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key, required this.title}) : super(key: key);
@@ -70,7 +69,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
     if (mapController.bounds != null) {
       for (int i = 0; i < markers.length; i++) {
         if (!mapController.bounds!.contains(markers[i].point)) {
-          print("REMOVING BEASTIE");
+          debugPrint("REMOVING BEASTIE");
           markers.remove(markers[i]);
         }
       }
@@ -104,7 +103,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                             beastie: allBeastieList[
                                 random.nextInt(allBeastieList.length)])
                         .spawnMarker());
-                    print(beastieMarkers.length);
+                    debugPrint(beastieMarkers.length.toString());
                   }
                   mapController.onReady.then((_) {
                     mapController.move(mapCenter, zoomLevel);

@@ -61,16 +61,11 @@ class BeastieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        if ((horizDistToAvatar.abs() < latitudeRange * .9) &&
-            vertDistToAvatar.abs() < longitudeRange * .9) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      BattleScreen(title: appTitle, beastie: beastie)));
-        } else {
-          await tooFarPopup(context);
-        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    BattleScreen(title: appTitle, beastie: beastie)));
       },
       child: Image.asset(beastie.imagePath),
     );
