@@ -28,32 +28,13 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
-  late Avatar myAvatar = Avatar(locationData: locationData);
   final random = Random();
-  List<Marker> markers = [];
+  late List<Marker> beastieMarkers = [];
 
   @override
   void initState() {
     super.initState();
-    setMapBeasties();
-  }
-
-  void setMapBeasties() async {
-    await getLocation();
-
-    final BeastiesData beastiesData = BeastiesData();
-    final List<Beastie> allBeastieList = await beastiesData.getBeasties();
-
-    markers = [
-      myAvatar.avatarMarker(),
-      // This is hardcoded to 3 but we could use a for loop with a random number
-      // to generate a random number of beasties if we wanted to
-      ...[1, 2, 3].map((_) => BeastieWidget(
-              locationData: locationData,
-              beastie: allBeastieList[random.nextInt(allBeastieList.length)])
-          .spawnMarker())
-    ];
-    setState(() {});
+    getLocation();
   }
 
   Future<void> getLocation() async {
@@ -84,7 +65,19 @@ class _MapViewScreenState extends State<MapViewScreen> {
     setState(() {});
   }
 
-  Widget map(BuildContext context, List<Marker> markers) {
+  void removeOutOfBoundsBeasties(
+      List<Marker> markers, MapController mapController) {
+    if (mapController.bounds != null) {
+      for (int i = 0; i < markers.length; i++) {
+        if (!mapController.bounds!.contains(markers[i].point)) {
+          print("REMOVING BEASTIE");
+          markers.remove(markers[i]);
+        }
+      }
+    }
+  }
+
+  Widget map(BuildContext context) {
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
@@ -98,28 +91,46 @@ class _MapViewScreenState extends State<MapViewScreen> {
             latlng.LatLng mapCenter = latlng.LatLng(
                 currLocation.data!.latitude!, currLocation.data!.longitude!);
             const zoomLevel = 18.0;
-            mapController.onReady.then((_) {
-              mapController.move(mapCenter, zoomLevel);
-            });
-            return FlutterMap(
-              mapController: mapController,
-              options: MapOptions(
-                zoom: zoomLevel,
-                interactiveFlags: InteractiveFlag.none,
-              ),
-              layers: [
-                TileLayerOptions(
-                    urlTemplate: dotenv.env['MAPBOX_URL'],
-                    attributionBuilder: (_) {
-                      return const Text("© Mapbox");
-                    },
-                    additionalOptions: {
-                      'accessToken': dotenv.env['MAPBOX_API_KEY']!,
-                      'id': 'mapbox.mapbox-streets-v8'
-                    }),
-                MarkerLayerOptions(markers: markers),
-              ],
-            );
+            return FutureBuilder(
+                future: BeastiesData().getBeasties(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+                  final allBeastieList = snapshot.data;
+                  while (beastieMarkers.length < 4) {
+                    beastieMarkers.add(BeastieWidget(
+                            locationData: currLocation.data,
+                            beastie: allBeastieList[
+                                random.nextInt(allBeastieList.length)])
+                        .spawnMarker());
+                    print(beastieMarkers.length);
+                  }
+                  mapController.onReady.then((_) {
+                    mapController.move(mapCenter, zoomLevel);
+                    removeOutOfBoundsBeasties(beastieMarkers, mapController);
+                  });
+
+                  return FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      zoom: zoomLevel,
+                      interactiveFlags: InteractiveFlag.none,
+                    ),
+                    layers: [
+                      TileLayerOptions(
+                          urlTemplate: dotenv.env['MAPBOX_URL'],
+                          attributionBuilder: (_) {
+                            return const Text("© Mapbox");
+                          },
+                          additionalOptions: {
+                            'accessToken': dotenv.env['MAPBOX_API_KEY']!,
+                            'id': 'mapbox.mapbox-streets-v8'
+                          }),
+                      MarkerLayerOptions(markers: [...beastieMarkers]),
+                    ],
+                  );
+                });
           });
     }
   }
@@ -133,7 +144,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
           automaticallyImplyLeading: false),
       body: Center(
           child: Stack(children: [
-        map(context, markers),
+        map(context),
+        const Avatar(),
         IgnorePointer(child: buildCompass())
       ])),
       // borrowed this button temporarily to link to collection screen
