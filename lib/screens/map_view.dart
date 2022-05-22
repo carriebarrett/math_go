@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
+import 'package:math_go/database/beasties.dart';
+import 'package:math_go/models/beastie_model.dart';
 
 import '../widgets/avatar.dart';
 import '../widgets/beastie_widget.dart';
@@ -24,22 +28,35 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
-
   late Avatar myAvatar = Avatar(locationData: locationData);
-
-  late BeastieWidget beastie1 = BeastieWidget(locationData: locationData);
-  late BeastieWidget beastie2 = BeastieWidget(locationData: locationData);
-  late BeastieWidget beastie3 = BeastieWidget(locationData: locationData);
-
+  final random = Random();
   List<Marker> markers = [];
 
   @override
   void initState() {
     super.initState();
-    getLocation();
+    setMapBeasties();
   }
 
-  void getLocation() async {
+  void setMapBeasties() async {
+    await getLocation();
+
+    final BeastiesData beastiesData = BeastiesData();
+    final List<Beastie> allBeastieList = await beastiesData.getBeasties();
+
+    markers = [
+      myAvatar.avatarMarker(),
+      // This is hardcoded to 3 but we could use a for loop with a random number
+      // to generate a random number of beasties if we wanted to
+      ...[1, 2, 3].map((_) => BeastieWidget(
+              locationData: locationData,
+              beastie: allBeastieList[random.nextInt(allBeastieList.length)])
+          .spawnMarker())
+    ];
+    setState(() {});
+  }
+
+  Future<void> getLocation() async {
     try {
       var _serviceEnabled = await locationService.serviceEnabled();
       if (!_serviceEnabled) {
@@ -64,21 +81,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
-    markers = [
-      myAvatar.avatarMarker(),
-      beastie1.spawnMarker(),
-      beastie2.spawnMarker(),
-      beastie3.spawnMarker()
-    ];
     setState(() {});
   }
 
   Widget map(BuildContext context, List<Marker> markers) {
     MapControllerImpl mapController = MapControllerImpl();
-    if (markers.length < 5 && locationData != null) {
-      BeastieWidget newBeastie = BeastieWidget(locationData: locationData);
-      markers.add(newBeastie.spawnMarker());
-    }
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
     } else {

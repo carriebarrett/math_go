@@ -6,15 +6,16 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:math_go/constants.dart';
-//import 'package:math_go/database/beasties.dart';
 
 import '../models/beastie_model.dart';
 import '../screens/battle.dart';
 
 class BeastieWidget extends StatelessWidget {
   final LocationData? locationData;
-  BeastieWidget({Key? key, required this.locationData}) : super(key: key);
+  BeastieWidget({Key? key, required this.locationData, required this.beastie})
+      : super(key: key);
 
+  final Beastie beastie;
   final random = Random();
   final double longitudeRange = 0.00085;
   final double latitudeRange = 0.00088;
@@ -32,27 +33,6 @@ class BeastieWidget extends StatelessWidget {
       beastieLatitude - (locationData?.latitude)!;
   late final double vertDistToAvatar =
       beastieLongitude - (locationData?.longitude)!;
-
-  // final BeastiesData beastiesData = BeastiesData();
-  // late final List<Beastie> allBeastieList = beastiesData.beasties;
-  late final List<Beastie> allBeastieList = [
-    Beastie(
-        beastieID: 1,
-        question: '1+1',
-        answer: '2',
-        imagePath: 'assets/images/beasties/blob1.png',
-        name: 'blob1',
-        type: 'math'),
-    Beastie(
-        beastieID: 2,
-        question: '2+2',
-        answer: '4',
-        imagePath: 'assets/images/beasties/leaf1.png',
-        name: 'leaf1',
-        type: 'math')
-  ];
-  late final Beastie randomBeastie =
-      allBeastieList[random.nextInt(allBeastieList.length)];
 
   Marker spawnMarker() {
     return Marker(
@@ -84,14 +64,15 @@ class BeastieWidget extends StatelessWidget {
         if ((horizDistToAvatar.abs() < latitudeRange * .9) &&
             vertDistToAvatar.abs() < longitudeRange * .9) {
           Navigator.push(
-            context, 
-            MaterialPageRoute(builder:(context) => BattleScreen(title: appTitle, beastie: randomBeastie)));
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      BattleScreen(title: appTitle, beastie: beastie)));
         } else {
           await tooFarPopup(context);
         }
       },
-      child: Image.asset(randomBeastie.imagePath),
+      child: Image.asset(beastie.imagePath),
     );
   }
 }
-
