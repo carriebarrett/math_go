@@ -57,14 +57,14 @@ class _MapViewScreenState extends State<MapViewScreen> {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
-    // initalize the list of beastie markers
+    // initalize the list of beastie markers with beasties near initial location
     for (var i = 0; i < 4; i++) {
       beastieWidgetList.add(BeastieWidget(locationData: locationData));
     }
     setState(() {});
   }
 
-  // check if there is at least one nearby beastie
+  // check if there are nearby beasties
   bool isNearbyBeastie(AsyncSnapshot<LocationData> currLocation) {
     int nearCount = 0;
     for (var beastie in beastieWidgetList) {
@@ -107,6 +107,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                     .add(BeastieWidget(locationData: currLocation.data));
               }
             }
+            // make a list of markers with just the Avatar marker
             List<Marker> markers = [
               Marker(
                   width: 110.0,
@@ -115,6 +116,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       currLocation.data!.longitude!),
                   builder: (ctx) => const Avatar())
             ];
+            // add markers for all beasties on the beastie widget list
             for (var i = 0; i < beastieWidgetList.length; i++) {
               markers.add(beastieWidgetList[i].spawnMarker());
             }
