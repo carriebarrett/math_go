@@ -18,7 +18,7 @@ class Beastie {
     return Beastie(
         beastieID: data['beastieID'] ?? 1,
         name: data['name'] ?? 'blob1',
-        imagePath: data['imagePath'] ?? './assets/images/beasties/leaf7.png',
+        imagePath: data['filePath'] ?? './assets/images/beasties/leaf7.png',
         type: data['type'] ?? 'Blob',
         question: data['Question'] ?? '2 + 2',
         answer: data['Answer'] ?? 4);
