@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:math_go/screens/battle.dart';
-import 'package:math_go/screens/map_view.dart';
-import 'package:math_go/screens/collection.dart';
-import 'package:math_go/screens/tutorial.dart';
-import 'screens/login.dart';
 
-String appTitle = 'Math GO!';
+import 'constants.dart';
+import 'screens/battle.dart';
+import 'screens/map_view.dart';
+import 'screens/collection.dart';
+import 'screens/tutorial.dart';
+import 'screens/login.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
   final _routes = {
-    MapViewScreen.routeName: (context) => MapViewScreen(title: appTitle),
-    BattleScreen.routeName: (context) => BattleScreen(title: appTitle),
-    CollectionScreen.routeName: (context) => CollectionScreen(title: appTitle),
-    Tutorial.routeName: (context) => Tutorial(title: appTitle)
+    MapViewScreen.routeName: (context) => const MapViewScreen(title: appTitle),
+    BattleScreen.routeName: (context) =>
+        BattleScreen(title: appTitle, beastie: sampleBeastie),
+    CollectionScreen.routeName: (context) =>
+        const CollectionScreen(title: appTitle),
+    Tutorial.routeName: (context) => const Tutorial(title: appTitle)
   };
 
   @override

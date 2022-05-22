@@ -1,15 +1,18 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_map/plugin_api.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 
 import '../widgets/avatar.dart';
-import '../widgets/beastie.dart';
+import '../widgets/beastie_widget.dart';
 import '../widgets/compass.dart';
 import '../constants.dart';
 import './collection.dart';
+import '/database/beasties.dart';
 
 class MapViewScreen extends StatefulWidget {
   const MapViewScreen({Key? key, required this.title}) : super(key: key);
@@ -24,6 +27,8 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
+  final random = Random();
+  late List<Marker> beastieMarkers = [];
 
   @override
   void initState() {
@@ -31,7 +36,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
     getLocation();
   }
 
-  void getLocation() async {
+  Future<void> getLocation() async {
     try {
       var _serviceEnabled = await locationService.serviceEnabled();
       if (!_serviceEnabled) {
@@ -59,10 +64,19 @@ class _MapViewScreenState extends State<MapViewScreen> {
     setState(() {});
   }
 
+  void removeOutOfBoundsBeasties(
+      List<Marker> markers, MapController mapController) {
+    if (mapController.bounds != null) {
+      for (int i = 0; i < markers.length; i++) {
+        if (!mapController.bounds!.contains(markers[i].point)) {
+          debugPrint("REMOVING BEASTIE");
+          markers.remove(markers[i]);
+        }
+      }
+    }
+  }
+
   Widget map(BuildContext context) {
-    Beastie beastie1 = Beastie(locationData: locationData);
-    Beastie beastie2 = Beastie(locationData: locationData);
-    Beastie beastie3 = Beastie(locationData: locationData);
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
@@ -74,44 +88,48 @@ class _MapViewScreenState extends State<MapViewScreen> {
               return const Center(child: CircularProgressIndicator());
             }
             latlng.LatLng mapCenter = latlng.LatLng(
-                currLocation.data!.latitude!,
-                currLocation.data!.longitude!);
+                currLocation.data!.latitude!, currLocation.data!.longitude!);
             const zoomLevel = 18.0;
-            mapController.onReady.then((_) {
-              mapController.move(mapCenter, zoomLevel);
-            });
-            return FlutterMap(
-              mapController: mapController,
-              options: MapOptions(
-                zoom: zoomLevel,
-                interactiveFlags: InteractiveFlag.none,
-              ),
-              layers: [
-                TileLayerOptions(
-                    urlTemplate: dotenv.env['MAPBOX_URL'],
-                    attributionBuilder: (_) {
-                      return const Text("© Mapbox");
-                    },
-                    additionalOptions: {
-                      'accessToken': dotenv.env['MAPBOX_API_KEY']!,
-                      'id': 'mapbox.mapbox-streets-v8'
-                    }),
-                MarkerLayerOptions(
-                  markers: [
-                    Marker(
-                        width: 110.0,
-                        height: 110.0,
-                        point: latlng.LatLng(
-                            currLocation.data!.latitude!,
-                            currLocation.data!.longitude!),
-                        builder: (ctx) => const Avatar()),
-                    beastie1.spawnMarker(),
-                    beastie2.spawnMarker(),
-                    beastie3.spawnMarker()
-                  ],
-                ),
-              ],
-            );
+            return FutureBuilder(
+                future: BeastiesData().getBeasties(),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (!snapshot.hasData) {
+                    return const CircularProgressIndicator();
+                  }
+                  final allBeastieList = snapshot.data;
+                  while (beastieMarkers.length < 4) {
+                    beastieMarkers.add(BeastieWidget(
+                            locationData: currLocation.data,
+                            beastie: allBeastieList[
+                                random.nextInt(allBeastieList.length)])
+                        .spawnMarker());
+                    debugPrint(beastieMarkers.length.toString());
+                  }
+                  mapController.onReady.then((_) {
+                    mapController.move(mapCenter, zoomLevel);
+                    removeOutOfBoundsBeasties(beastieMarkers, mapController);
+                  });
+
+                  return FlutterMap(
+                    mapController: mapController,
+                    options: MapOptions(
+                      zoom: zoomLevel,
+                      interactiveFlags: InteractiveFlag.none,
+                    ),
+                    layers: [
+                      TileLayerOptions(
+                          urlTemplate: dotenv.env['MAPBOX_URL'],
+                          attributionBuilder: (_) {
+                            return const Text("© Mapbox");
+                          },
+                          additionalOptions: {
+                            'accessToken': dotenv.env['MAPBOX_API_KEY']!,
+                            'id': 'mapbox.mapbox-streets-v8'
+                          }),
+                      MarkerLayerOptions(markers: [...beastieMarkers]),
+                    ],
+                  );
+                });
           });
     }
   }
@@ -124,8 +142,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
           title: Image.asset(logoImage, height: 40),
           automaticallyImplyLeading: false),
       body: Center(
-          child: Stack(
-              children: [map(context), IgnorePointer(child: buildCompass())])),
+          child: Stack(children: [
+        map(context),
+        const Avatar(),
+        IgnorePointer(child: buildCompass())
+      ])),
       // borrowed this button temporarily to link to collection screen
       floatingActionButton: FloatingActionButton(
         onPressed: () =>

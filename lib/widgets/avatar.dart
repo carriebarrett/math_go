@@ -10,7 +10,9 @@ class Avatar extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(CollectionScreen.routeName);
       },
-      child: Image.asset('assets/images/user.png'),
+      child: Center(
+        child: Image.asset('assets/images/user.png', width: 100, height: 100),
+      ),
     );
   }
 }
