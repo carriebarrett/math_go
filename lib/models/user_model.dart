@@ -10,8 +10,8 @@ class User {
 
   factory User.fromMap(Map<dynamic, dynamic> data) {
     return User(
-        userID: data['userID'] ?? 01,
+        userID: data['userID'] ?? '01',
         email: data['email'] ?? 'email.mail',
-        beastieCollectionID: data['collectionID'] ?? 01);
+        beastieCollectionID: data['collectionID'] ?? '01');
   }
 }
