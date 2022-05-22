@@ -19,3 +19,5 @@ final sampleBeastie = Beastie(
 
 const double longitudeRange = 0.00085;
 const double latitudeRange = 0.00088;
+const double horizAvatarPad = .00015;
+const double vertAvatarPad = .00032;
