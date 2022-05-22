@@ -68,25 +68,18 @@ class _MapViewScreenState extends State<MapViewScreen> {
   bool isNearbyBeastie(AsyncSnapshot<LocationData> currLocation) {
     int nearCount = 0;
     for (var beastie in beastieWidgetList) {
-      debugPrint(beastie.beastieLatitude.toString());
-      debugPrint(beastie.beastieLongitude.toString());
       double horizDistFromAvatar =
           beastie.beastieLatitude - currLocation.data!.latitude!;
       double vertDistFromAvatar =
           beastie.beastieLongitude - currLocation.data!.longitude!;
-      // debugPrint(horizDistFromAvatar.toString());
-      // debugPrint(vertDistFromAvatar.toString());
       if (horizDistFromAvatar.abs() < longitudeRange &&
           vertDistFromAvatar.abs() < latitudeRange) {
         nearCount += 1;
       }
     }
-    debugPrint(nearCount.toString());
     if (nearCount > 1) {
-      debugPrint("yes nearby beasties");
       return true;
     } else {
-      debugPrint("No nearby beasties");
       return false;
     }
   }
