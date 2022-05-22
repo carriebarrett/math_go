@@ -6,7 +6,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
 import 'package:math_go/constants.dart';
-import 'package:math_go/database/beasties.dart';
+// import 'package:math_go/database/beasties.dart';
 
 import '../models/beastie_model.dart';
 import '../screens/battle.dart';
@@ -14,27 +14,28 @@ import '../screens/battle.dart';
 class BeastieWidget extends StatelessWidget {
   final LocationData? locationData;
   BeastieWidget({Key? key, required this.locationData}) : super(key: key);
-
   final random = Random();
-  final double longitudeRange = 0.00085;
-  final double latitudeRange = 0.00088;
-  final double horizAvatarPad = .00015;
-  final double vertAvatarPad = .00032;
-  late final int randNum1 = random.nextInt(2);
-  late final int sign1 = randNum1 == 0 ? -1 : 1;
-  late final int randNum2 = random.nextInt(2);
-  late final int sign2 = randNum2 == 0 ? -1 : 1;
-  late final double randomLon =
-      sign1 * (random.nextDouble() * longitudeRange + horizAvatarPad);
-  late final double randomLat =
-      sign2 * (random.nextDouble() * latitudeRange + vertAvatarPad);
-  late final double beastieLatitude = (locationData?.latitude)! + randomLat;
-  late final double beastieLongitude = (locationData?.longitude)! + randomLon;
-  late final double horizDistToAvatar =
-      beastieLatitude - (locationData?.latitude)!;
-  late final double vertDistToAvatar =
-      beastieLongitude - (locationData?.longitude)!;
 
+  late final double beastieLatitude = setLatitude();
+  late final double beastieLongitude = setLongitude();
+
+  double setLatitude() {
+    int randNum = random.nextInt(2);
+    int sign = randNum == 0 ? -1 : 1;
+    double randomLat =
+        sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
+    double beastieLatitude = (locationData?.latitude)! + randomLat;
+    return beastieLatitude;
+  }
+
+  double setLongitude() {
+    int randNum = random.nextInt(2);
+    int sign = randNum == 0 ? -1 : 1;
+    double randomLon =
+        sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
+    double beastieLongitude = (locationData?.longitude)! + randomLon;
+    return beastieLongitude;
+  }
   // final BeastiesData beastiesData = BeastiesData();
   // late final Future<List> beastiesFuture = beastiesData.getBeasties();
   // late final List<Beastie> allBeastieList = await beastiesData.getBeasties();
