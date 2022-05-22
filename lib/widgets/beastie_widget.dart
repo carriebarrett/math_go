@@ -76,6 +76,7 @@ class BeastieWidget extends StatelessWidget {
         builder: (ctx) => this);
   }
 
+  // this popup will show when you are too far from the beastie that you clicked
   Future<void> tooFarPopup(BuildContext context) async {
     return await showDialog(
         context: context,
@@ -95,19 +96,11 @@ class BeastieWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        // currLocationData = await locationService.getLocation();
-        if ((horizDistToAvatar.abs() <
-                latitudeRange *
-                    .9) && // need to fix this so it considers UPDATED location, not just initial location
-            vertDistToAvatar.abs() < longitudeRange * .9) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      BattleScreen(title: appTitle, beastie: randomBeastie)));
-        } else {
-          await tooFarPopup(context);
-        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    BattleScreen(title: appTitle, beastie: randomBeastie)));
       },
       child: Image.asset(randomBeastie.imagePath),
     );
