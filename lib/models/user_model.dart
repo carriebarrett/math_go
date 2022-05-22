@@ -12,6 +12,6 @@ class User {
     return User(
         userID: data['userID'] ?? '01',
         email: data['email'] ?? 'email.mail',
-        beastieCollectionID: data['collectionID'] ?? '01');
+        beastieCollectionID: data['beastieCollectionID'] ?? '01');
   }
 }
