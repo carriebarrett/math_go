@@ -20,12 +20,14 @@ class BeastieWidget extends StatelessWidget {
   final double latitudeRange = 0.00088;
   final double horizAvatarPad = .00015;
   final double vertAvatarPad = .00032;
-  late final int randNum = random.nextInt(2);
-  late final int sign = randNum == 0 ? -1 : 1;
+  late final int randNum1 = random.nextInt(2);
+  late final int sign1 = randNum1 == 0 ? -1 : 1;
+  late final int randNum2 = random.nextInt(2);
+  late final int sign2 = randNum2 == 0 ? -1 : 1;
   late final double randomLon =
-      sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
+      sign1 * (random.nextDouble() * longitudeRange + horizAvatarPad);
   late final double randomLat =
-      sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
+      sign2 * (random.nextDouble() * latitudeRange + vertAvatarPad);
   late final double beastieLatitude = (locationData?.latitude)! + randomLat;
   late final double beastieLongitude = (locationData?.longitude)! + randomLon;
   late final double horizDistToAvatar =
@@ -35,7 +37,8 @@ class BeastieWidget extends StatelessWidget {
 
   // final BeastiesData beastiesData = BeastiesData();
   // late final Future<List> beastiesFuture = beastiesData.getBeasties();
-  // late final List<Beastie> allBeastieList = beastiesData.beasties;
+  // late final List<Beastie> allBeastieList = await beastiesData.getBeasties();
+
   late final List<Beastie> allBeastieList = [
     Beastie(
         beastieID: 1,
@@ -52,6 +55,16 @@ class BeastieWidget extends StatelessWidget {
         name: 'leaf1',
         type: 'math')
   ];
+
+  // Beastie getRandomBeastie() {
+  //   BeastiesData beastiesData = BeastiesData();
+  //   beastiesData.getBeasties().then((allBeastiesList) {
+  //     Beastie randomBeastie =
+  //         allBeastiesList[random.nextInt(allBeastiesList.length)];
+  //         return randomBeastie;
+  //   });
+  // }
+
   late final Beastie randomBeastie =
       allBeastieList[random.nextInt(allBeastieList.length)];
 

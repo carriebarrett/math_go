@@ -24,6 +24,7 @@ class MapViewScreen extends StatefulWidget {
 class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
+  List<BeastieWidget> beastieWidgetList = [];
 
   @override
   void initState() {
@@ -56,13 +57,41 @@ class _MapViewScreenState extends State<MapViewScreen> {
       debugPrint('Error: ${e.toString()}, code: ${e.code}');
       locationData = null;
     }
+    // initalize the list of beastie markers
+    for (var i = 0; i < 4; i++) {
+      beastieWidgetList.add(BeastieWidget(locationData: locationData));
+    }
     setState(() {});
   }
 
+  // check if there is at least one nearby beastie
+  bool isNearbyBeastie(AsyncSnapshot<LocationData> currLocation) {
+    int nearCount = 0;
+    for (var beastie in beastieWidgetList) {
+      debugPrint(beastie.beastieLatitude.toString());
+      debugPrint(beastie.beastieLongitude.toString());
+      double horizDistFromAvatar =
+          beastie.beastieLatitude - currLocation.data!.latitude!;
+      double vertDistFromAvatar =
+          beastie.beastieLongitude - currLocation.data!.longitude!;
+      // debugPrint(horizDistFromAvatar.toString());
+      // debugPrint(vertDistFromAvatar.toString());
+      if (horizDistFromAvatar.abs() < longitudeRange &&
+          vertDistFromAvatar.abs() < latitudeRange) {
+        nearCount += 1;
+      }
+    }
+    debugPrint(nearCount.toString());
+    if (nearCount > 1) {
+      debugPrint("yes nearby beasties");
+      return true;
+    } else {
+      debugPrint("No nearby beasties");
+      return false;
+    }
+  }
+
   Widget map(BuildContext context) {
-    BeastieWidget beastie1 = BeastieWidget(locationData: locationData);
-    BeastieWidget beastie2 = BeastieWidget(locationData: locationData);
-    BeastieWidget beastie3 = BeastieWidget(locationData: locationData);
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
       return const Center(child: CircularProgressIndicator());
@@ -79,6 +108,23 @@ class _MapViewScreenState extends State<MapViewScreen> {
             mapController.onReady.then((_) {
               mapController.move(mapCenter, zoomLevel);
             });
+            if (!isNearbyBeastie(currLocation)) {
+              for (var i = 0; i < 2; i++) {
+                beastieWidgetList
+                    .add(BeastieWidget(locationData: currLocation.data));
+              }
+            }
+            List<Marker> markers = [
+              Marker(
+                  width: 110.0,
+                  height: 110.0,
+                  point: latlng.LatLng(currLocation.data!.latitude!,
+                      currLocation.data!.longitude!),
+                  builder: (ctx) => const Avatar())
+            ];
+            for (var i = 0; i < beastieWidgetList.length; i++) {
+              markers.add(beastieWidgetList[i].spawnMarker());
+            }
             return FlutterMap(
               mapController: mapController,
               options: MapOptions(
@@ -95,19 +141,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
                       'accessToken': dotenv.env['MAPBOX_API_KEY']!,
                       'id': 'mapbox.mapbox-streets-v8'
                     }),
-                MarkerLayerOptions(
-                  markers: [
-                    Marker(
-                        width: 110.0,
-                        height: 110.0,
-                        point: latlng.LatLng(currLocation.data!.latitude!,
-                            currLocation.data!.longitude!),
-                        builder: (ctx) => const Avatar()),
-                    beastie1.spawnMarker(),
-                    beastie2.spawnMarker(),
-                    beastie3.spawnMarker()
-                  ],
-                ),
+                MarkerLayerOptions(markers: markers),
               ],
             );
           });

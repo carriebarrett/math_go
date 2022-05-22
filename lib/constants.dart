@@ -16,3 +16,6 @@ final sampleBeastie = Beastie(
     imagePath: 'assets/images/beasties/blob1.png',
     name: 'blob1',
     type: 'math');
+
+const double longitudeRange = 0.00085;
+const double latitudeRange = 0.00088;
