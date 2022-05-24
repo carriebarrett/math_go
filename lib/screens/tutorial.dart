@@ -8,7 +8,7 @@ User? user = FirebaseAuth.instance.currentUser;
 var tutorials = [
   {
     "prompt":
-        '''Welcome to the world of Math Go, ${user!.displayName!}. This is a brief tutorial to help you get acclimated to the world around you. Click on this chat bubble when you are ready to proceed.''',
+        '''Welcome to the world of Math Go, ${user!.displayName!}. This is a brief tutorial to help you get acclimated to the world around you. Use the floating action button at the bottom of the screen to navigate.''',
     "asset": ""
   },
   {
@@ -71,67 +71,77 @@ class _TutorialState extends State<Tutorial> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      constraints: const BoxConstraints.expand(),
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage("assets/images/logos_and_icons/background.png"),
-            fit: BoxFit.cover),
-      ),
-      child: Container(
-          padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.25,
-              bottom: MediaQuery.of(context).size.height * 0.25),
-          child: Column(
-            children: [
-              imageContainer(context, asset),
-              const Padding(padding: EdgeInsets.only(bottom: 30)),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+    //willPopScope prevents user from using back arrow on phone to navigate.
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(false);
+      },
+      child: Scaffold(
+          floatingActionButton: FloatingActionButton(
+              //String used in customText is set here.
+              //Each tap increments the counter, and ultimately routes to
+              //game map.
+              onPressed: () {
+                screenCounter++;
+                if (screenCounter == 3) {
+                  Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                  return; //Prevents invoking setState when routing.
+                }
+                setState(() {
+                  currentString = tutorials[screenCounter]['prompt']!;
+                  asset = tutorials[screenCounter]['asset']!;
+                });
+              },
+              child: const Icon(Icons.arrow_circle_right_outlined)),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          body: Container(
+            constraints: const BoxConstraints.expand(),
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                      "assets/images/logos_and_icons/background.png"),
+                  fit: BoxFit.cover),
+            ),
+            child: Container(
+                padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).size.height * 0.25,
+                    bottom: MediaQuery.of(context).size.height * 0.25),
+                child: Column(
+                  children: [
+                    imageContainer(context, asset),
+                    const Padding(padding: EdgeInsets.only(bottom: 30)),
+                    Row(
                       children: [
-                        Image.asset("assets/images/logos_and_icons/leaf1.png")
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                  "assets/images/logos_and_icons/leaf1.png")
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                              margin: const EdgeInsets.all(8.0),
+                              decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(16)),
+                              child: Padding(
+                                key:
+                                    UniqueKey(), //This is necessary for the animation to repeat on each click.
+                                padding: const EdgeInsets.all(10),
+                                child:
+                                    customText(currentString), //Animated text
+                              )),
+                        ),
                       ],
                     ),
-                  ),
-                  Expanded(
-                    child: GestureDetector(
-                      //String used in customText is set here.
-                      //Each tap increments the counter, and ultimately routes to
-                      //game map.
-                      onTap: () {
-                        screenCounter++;
-                        if (screenCounter == 3) {
-                          Navigator.of(context)
-                              .pushNamed(MapViewScreen.routeName);
-                          return; //Prevents invoking setState when routing.
-                        }
-                        setState(() {
-                          currentString = tutorials[screenCounter]['prompt']!;
-                          asset = tutorials[screenCounter]['asset']!;
-                        });
-                      },
-                      child: Container(
-                          margin: const EdgeInsets.all(8.0),
-                          decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(16)),
-                          child: Padding(
-                            key:
-                                UniqueKey(), //This is necessary for the animation to repeat on each click.
-                            padding: const EdgeInsets.all(10),
-                            child: customText(currentString), //Animated text
-                          )),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                )),
           )),
-    ));
+    );
   }
 }
