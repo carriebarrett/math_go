@@ -16,15 +16,12 @@ class BattleScreen extends StatefulWidget {
   final String title;
   static const routeName = 'battle';
   @override
-  State<BattleScreen> createState() => _BattleScreenState(beastie);
+  State<BattleScreen> createState() => _BattleScreenState();
 }
 
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
   final AnswerDTO _answerDTO = AnswerDTO();
-  final Beastie beastie;
-
-  _BattleScreenState(this.beastie);
 
   @override
   void initState() {
@@ -77,7 +74,7 @@ class _BattleScreenState extends State<BattleScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      beastie.question,
+                      widget.beastie.question,
                       textAlign: TextAlign.center,
                       style:
                           const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
@@ -122,17 +119,17 @@ class _BattleScreenState extends State<BattleScreen> {
                         _formKey.currentState?.save();
                         // The answer and beastie name are hardcoded until
                         // we have data from db
-                        const beastieName = "BEASTIE_NAME_GOES_HERE";
-                        if (isCorrectAnswer(_answerDTO.answer, '5')) {
+                        var beastieName = widget.beastie.name;
+                        if (isCorrectAnswer(_answerDTO.answer, widget.beastie.answer)) {
                           addBeastieToCollection();
                           ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                              .showSnackBar(SnackBar(
                             content:
                                 Text('You successfully captured $beastieName'),
                           ));
                         } else {
                           ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                              .showSnackBar(SnackBar(
                             content: Text('$beastieName got away!'),
                           ));
                         }
@@ -160,7 +157,7 @@ class _BattleScreenState extends State<BattleScreen> {
             await showQuestion(context);
           }, // Image tapped
           child: Image.asset(
-            beastie.imagePath,
+            widget.beastie.imagePath,
             fit: BoxFit.contain, // Fixes border issues
             width: 100,
             height: 100,
