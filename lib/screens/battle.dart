@@ -80,11 +80,11 @@ class _BattleScreenState extends State<BattleScreen> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    const Text(
-                      '2 + 3 = ?',
+                    Text(
+                      widget.beastie.question,
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
+                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
                     ),
                     const SizedBox(height: 5),
                     TextFormField(
@@ -127,15 +127,17 @@ class _BattleScreenState extends State<BattleScreen> {
                         _formKey.currentState?.save();
                         // The answer and beastie name are hardcoded until
                         // we have data from db
-                        final String beastieName = widget.beastie.name;
-                        if (isCorrectAnswer(_answerDTO.answer, '5')) {
+                        var beastieName = widget.beastie.name;
+                        if (isCorrectAnswer(_answerDTO.answer, widget.beastie.answer)) {
                           addBeastieToCollection();
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
                             content:
                                 Text('You successfully captured $beastieName'),
                           ));
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(SnackBar(
                             content: Text('$beastieName got away!'),
                           ));
                         }
@@ -154,16 +156,21 @@ class _BattleScreenState extends State<BattleScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan[100],
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
       body: Center(
-        child: TextButton(
-            onPressed: () async {
-              await showQuestion(context);
-            },
-            child: const Text(
-              'Show Question',
-            )),
+        child: GestureDetector(
+          onTap: () async {
+            await showQuestion(context);
+          }, // Image tapped
+          child: Image.asset(
+            widget.beastie.imagePath,
+            fit: BoxFit.contain, // Fixes border issues
+            width: 100,
+            height: 100,
+          ),
+        ),
       ),
     );
   }
