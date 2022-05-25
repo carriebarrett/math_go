@@ -114,10 +114,11 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   final allBeastieList = snapshot.data;
                   while (beastieMarkers.length < 4) {
                     beastieMarkers.add(BeastieWidget(
-                            locationData: currLocation.data,
+                            initialLocationData: currLocation.data,
                             beastie: allBeastieList[
                                 random.nextInt(allBeastieList.length)],
-                            onTapFn: onTapBeastie)
+                            onTapFn: onTapBeastie,
+                            locationService: locationService)
                         .spawnMarker());
                   }
                   mapController.onReady.then((_) {
