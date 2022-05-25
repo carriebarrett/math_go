@@ -3,17 +3,21 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:math_go/database/answer_dto.dart';
-import 'package:math_go/screens/map_view.dart';
+import 'package:math_go/database/beastie_collection.dart';
 
 import '../constants.dart';
 import '../models/beastie_model.dart';
-import 'map_view.dart';
 
 class BattleScreen extends StatefulWidget {
-  const BattleScreen({Key? key, required this.title, required this.beastie})
+  const BattleScreen(
+      {Key? key,
+      required this.title,
+      required this.beastie,
+      required this.collectionId})
       : super(key: key);
   final Beastie beastie;
   final String title;
+  final String collectionId;
   static const routeName = 'battle';
   @override
   State<BattleScreen> createState() => _BattleScreenState();
@@ -30,10 +34,12 @@ class _BattleScreenState extends State<BattleScreen> {
   }
 
   void handleTimeout() {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('The beastie got away!'),
     ));
-    Navigator.of(context).pushNamed(MapViewScreen.routeName);
+    int count = 0;
+    Navigator.of(context).popUntil((_) => count++ >= 2);
   }
 
   // This is a placeholder for more complex logic when we have the
@@ -44,11 +50,8 @@ class _BattleScreenState extends State<BattleScreen> {
 
 // placeholder function to add the beastie to the db
   void addBeastieToCollection() {
-    // print(widget.beastieCollection);
-    // BeastieCollectionsData().updateCollection(
-    //     widget.beastieCollection?.beastieCollectionID,
-    //     widget.beastieCollection?.beastiesIds,
-    //     "4");
+    BeastieCollectionsData()
+        .updateCollection(widget.collectionId, widget.beastie.beastieID);
   }
 
   Future<void> showQuestion(BuildContext context) async {
@@ -111,7 +114,8 @@ class _BattleScreenState extends State<BattleScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text('Fleeing the battle!'),
                       ));
-                      Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                      int count = 0;
+                      Navigator.of(context).popUntil((_) => count++ >= 2);
                     },
                   ),
                   const Spacer(),
@@ -123,22 +127,20 @@ class _BattleScreenState extends State<BattleScreen> {
                         _formKey.currentState?.save();
                         // The answer and beastie name are hardcoded until
                         // we have data from db
-                        const beastieName = "BEASTIE_NAME_GOES_HERE";
+                        final String beastieName = widget.beastie.name;
                         if (isCorrectAnswer(_answerDTO.answer, '5')) {
                           addBeastieToCollection();
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content:
                                 Text('You successfully captured $beastieName'),
                           ));
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text('$beastieName got away!'),
                           ));
                         }
-                        Navigator.of(context)
-                            .pushNamed(MapViewScreen.routeName);
+                        int count = 0;
+                        Navigator.of(context).popUntil((_) => count++ >= 2);
                       }
                     },
                   )
