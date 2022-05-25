@@ -1,13 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
 import 'package:math_go/db/answer_dto.dart';
 import 'package:math_go/screens/map_view.dart';
 
 import '../constants.dart';
+import '../models/beastie_model.dart';
+import 'map_view.dart';
 
 class BattleScreen extends StatefulWidget {
-  const BattleScreen({Key? key, required this.title}) : super(key: key);
+  const BattleScreen({Key? key, required this.title, required this.beastie})
+      : super(key: key);
+  final Beastie beastie;
   final String title;
   static const routeName = 'battle';
   @override

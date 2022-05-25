@@ -1,10 +1,11 @@
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/material.dart';
-import 'package:math_go/screens/map_view.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:math_go/screens/tutorial.dart';
+
+import 'map_view.dart';
+import 'tutorial.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
