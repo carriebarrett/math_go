@@ -9,12 +9,14 @@ import 'package:location/location.dart';
 import '../models/beastie_model.dart';
 
 class BeastieWidget extends StatelessWidget {
-  final LocationData? locationData;
+  final LocationData? initialLocationData;
+  final Location locationService;
   BeastieWidget(
       {Key? key,
-      required this.locationData,
+      required this.initialLocationData,
       required this.beastie,
-      required this.onTapFn})
+      required this.onTapFn,
+      required this.locationService})
       : super(key: key);
   final Function(Beastie) onTapFn;
 
@@ -30,12 +32,14 @@ class BeastieWidget extends StatelessWidget {
       sign * (random.nextDouble() * longitudeRange + horizAvatarPad);
   late final double randomLat =
       sign * (random.nextDouble() * latitudeRange + vertAvatarPad);
-  late final double beastieLatitude = (locationData?.latitude)! + randomLat;
-  late final double beastieLongitude = (locationData?.longitude)! + randomLon;
+  late final double beastieLatitude =
+      (initialLocationData?.latitude)! + randomLat;
+  late final double beastieLongitude =
+      (initialLocationData?.longitude)! + randomLon;
   late final double horizDistToAvatar =
-      beastieLatitude - (locationData?.latitude)!;
+      beastieLatitude - (initialLocationData?.latitude)!;
   late final double vertDistToAvatar =
-      beastieLongitude - (locationData?.longitude)!;
+      beastieLongitude - (initialLocationData?.longitude)!;
 
   Marker spawnMarker() {
     return Marker(
@@ -60,10 +64,33 @@ class BeastieWidget extends StatelessWidget {
         });
   }
 
+  Future<bool> isCloseEnough(BuildContext context) async {
+    LocationData currLocationData = await locationService.getLocation();
+    double? currLat = currLocationData.latitude;
+    double? currLon = currLocationData.longitude;
+    double latDifference = currLat! - beastieLatitude;
+    double lonDifference = currLon! - beastieLongitude;
+    double allowedDistPercent = 0.9;
+    if (latDifference.abs() < latitudeRange * allowedDistPercent &&
+        lonDifference.abs() < longitudeRange * allowedDistPercent) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onTapFn(beastie),
+      onTap: () {
+        isCloseEnough(context).then((isClose) {
+          if (isClose) {
+            return onTapFn(beastie);
+          } else {
+            return tooFarPopup(context);
+          }
+        });
+      },
       child: Image.asset(beastie.imagePath),
     );
   }
