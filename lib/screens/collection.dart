@@ -7,9 +7,12 @@ import '../models/beastie_collection_model.dart';
 import '../models/beastie_model.dart';
 
 class CollectionScreen extends StatefulWidget {
-  const CollectionScreen({Key? key, required this.title}) : super(key: key);
+  const CollectionScreen(
+      {Key? key, required this.title, required this.collectionId})
+      : super(key: key);
   final String title;
   static const routeName = 'collection';
+  final String collectionId;
 
   @override
   State<CollectionScreen> createState() => _CollectionScreenState();
@@ -18,24 +21,6 @@ class CollectionScreen extends StatefulWidget {
 // Collection list will be populated with info from database - temporarily hardcoded
 // Someone please help come up with beastie and type names, I am terrible at it lol
 class _CollectionScreenState extends State<CollectionScreen> {
-  List<Beastie> beasties = [
-    Beastie.fromMap({
-      "name": 'Mowgli',
-      "filename": './assets/images/beasties/leaf7.png',
-      "type": 'Leaf'
-    }),
-    Beastie.fromMap({
-      "name": 'Apollo',
-      "filename": './assets/images/beasties/flower6.png',
-      "type": 'Flower'
-    }),
-    Beastie.fromMap({
-      "name": 'Arty',
-      "filename": './assets/images/beasties/blob10.png',
-      "type": 'Blob'
-    }),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,15 +50,16 @@ class _CollectionScreenState extends State<CollectionScreen> {
               height: 600,
               child: FutureBuilder(
                   future: BeastieCollectionsData().getCollections(),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (!snapshot.hasData) {
+                  builder: (context, AsyncSnapshot collectionsSnapshot) {
+                    if (!collectionsSnapshot.hasData) {
                       return const CircularProgressIndicator();
                     }
-                    List<BeastieCollection> allCollections = snapshot.data;
-                    // This should be the collection for the particular user but we can't do
-                    // that just yet.
-                    BeastieCollection _beastieCollection = allCollections[0];
-
+                    final BeastieCollection _beastieCollection =
+                        (collectionsSnapshot.data as List<BeastieCollection>)
+                            .where((collection) =>
+                                widget.collectionId ==
+                                collection.beastieCollectionID)
+                            .toList()[0];
                     return FutureBuilder(
                         future: BeastiesData().getBeasties(),
                         builder: (context, AsyncSnapshot snapshot) {
@@ -81,18 +67,12 @@ class _CollectionScreenState extends State<CollectionScreen> {
                             return const CircularProgressIndicator();
                           }
                           List<Beastie> allBeasties = snapshot.data;
-                          // This doesn't work correctly right now because every beastie
-                          // is missing a beastieId so it's all being assigned 1
-                          // as it's id.
-                          // So it thinks every beastie is a part of the collectedBeasties.
-                          // ignore: unused_local_variable
                           List<Beastie> collectedBeasties = allBeasties
-                              .takeWhile((beastie) => _beastieCollection
-                                  .beastiesIds
+                              .where((beastie) => _beastieCollection.beastiesIds
                                   .contains(beastie.beastieID))
                               .toList();
                           return ListView.builder(
-                              itemCount: beasties.length,
+                              itemCount: collectedBeasties.length,
                               itemBuilder: (context, index) {
                                 return Card(
                                   child: SizedBox(
@@ -100,10 +80,11 @@ class _CollectionScreenState extends State<CollectionScreen> {
                                     child: Row(
                                       children: [
                                         const SizedBox(width: 20),
-                                        Image.asset(beasties[index].imagePath),
+                                        Image.asset(
+                                            collectedBeasties[index].imagePath),
                                         const SizedBox(width: 50),
                                         Text(
-                                          beasties[index].name,
+                                          collectedBeasties[index].name,
                                           style: const TextStyle(fontSize: 20),
                                         ),
                                       ],

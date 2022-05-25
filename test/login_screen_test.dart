@@ -11,7 +11,7 @@ void main() {
       'Login Flow',
       () => testWidgets('with existing account', (WidgetTester tester) async {
             // Build our app and trigger a frame.
-            await tester.pumpWidget(MyApp());
+            await tester.pumpWidget(const MyApp());
 
             // Find the existing account button
             final existingAccountBtn = find.text('Existing Account');

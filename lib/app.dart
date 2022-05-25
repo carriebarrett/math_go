@@ -1,23 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'screens/battle.dart';
-import 'screens/map_view.dart';
-import 'screens/collection.dart';
-import 'screens/tutorial.dart';
 import 'screens/login.dart';
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  final _routes = {
-    MapViewScreen.routeName: (context) => const MapViewScreen(title: appTitle),
-    BattleScreen.routeName: (context) =>
-        BattleScreen(title: appTitle, beastie: sampleBeastie),
-    CollectionScreen.routeName: (context) =>
-        const CollectionScreen(title: appTitle),
-    Tutorial.routeName: (context) => const Tutorial(title: appTitle)
-  };
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +14,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const LoginScreen(),
-      routes: _routes,
     );
   }
 }
