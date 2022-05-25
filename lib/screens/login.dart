@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -20,6 +21,9 @@ class _LoginScreenState extends State<LoginScreen> {
     // return FirebaseAuth.instance.currentUser == null;
   }
 
+  final _database = FirebaseDatabase.instance.ref();
+  final FirebaseAuth auth = FirebaseAuth.instance;
+
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -33,6 +37,20 @@ class _LoginScreenState extends State<LoginScreen> {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
+
+    // Set initial values on sign in  with Google
+    final User? user = auth.currentUser;
+    final path = user?.uid;
+    final userDatabase = _database.child('/Users/').child(path!);
+    userDatabase.update({
+      'userID': user?.uid,
+      'beastieCollectionID': user?.uid,
+      'email': user?.email
+    });
+
+    // Setup the Beastie Collection for the user
+    final addCollection = _database.child('/BeastieCollection/').child(path);
+    addCollection.update({'beastieCollectionID': user?.uid});
 
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
