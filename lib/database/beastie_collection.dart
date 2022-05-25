@@ -18,4 +18,18 @@ class BeastieCollectionsData {
   Future<DataSnapshot> getSnapshot() async {
     return await _database.child('/BeastieCollection').get();
   }
+
+  Future<DataSnapshot> getSingleSnapshot(String id) async {
+    return await _database.child('/BeastieCollection/$id').get();
+  }
+
+  // Updates a specific collection with a new beastie
+  Future<void> updateCollection(String collectionId, int beastieId) async {
+    DataSnapshot collectionSnapshot = await getSingleSnapshot(collectionId);
+    final BeastieCollection beastieCollection = BeastieCollection.fromMap(
+        (collectionSnapshot.value as Map<dynamic, dynamic>));
+    await _database.child('/BeastieCollection/$collectionId').update({
+      'beastieIDs': [...beastieCollection.beastiesIds, beastieId].toString()
+    });
+  }
 }

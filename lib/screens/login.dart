@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:math_go/constants.dart';
 
 import 'map_view.dart';
 import 'tutorial.dart';
@@ -87,7 +88,13 @@ class _LoginScreenState extends State<LoginScreen> {
               onPressed: _isDisabled()
                   ? null
                   : () {
-                      Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MapViewScreen(
+                                  title: appTitle,
+                                  collectionId:
+                                      'F7pByf4fiUfGApYkGlOOjez1MW23')));
                     },
               child: const Text("Existing Account")),
           const SizedBox(
@@ -98,7 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
               style: style,
               onPressed: () async {
                 await signInWithGoogle();
-                Navigator.of(context).pushNamed(Tutorial.routeName);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Tutorial(
+                            title: appTitle,
+                            collectionId: 'F7pByf4fiUfGApYkGlOOjez1MW23')));
                 setState(() {
                   _isDisabled();
                 });

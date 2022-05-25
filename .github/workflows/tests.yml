@@ -31,7 +31,6 @@ jobs:
 
       - name: Analyze
         run: flutter analyze
-
 # Have to remove this since the google login is not as friendly to work with for
 # testing purposes :(
 # - name: Run tests

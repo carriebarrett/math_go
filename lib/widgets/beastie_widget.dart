@@ -5,15 +5,18 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import 'package:location/location.dart';
-import 'package:math_go/constants.dart';
 
 import '../models/beastie_model.dart';
-import '../screens/battle.dart';
 
 class BeastieWidget extends StatelessWidget {
   final LocationData? locationData;
-  BeastieWidget({Key? key, required this.locationData, required this.beastie})
+  BeastieWidget(
+      {Key? key,
+      required this.locationData,
+      required this.beastie,
+      required this.onTapFn})
       : super(key: key);
+  final Function(Beastie) onTapFn;
 
   final Beastie beastie;
   final random = Random();
@@ -60,13 +63,7 @@ class BeastieWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    BattleScreen(title: appTitle, beastie: beastie)));
-      },
+      onTap: () => onTapFn(beastie),
       child: Image.asset(beastie.imagePath),
     );
   }

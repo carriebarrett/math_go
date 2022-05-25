@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:math_go/constants.dart';
 import 'package:math_go/screens/map_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -23,9 +24,11 @@ var tutorials = [
 ];
 
 class Tutorial extends StatefulWidget {
-  const Tutorial({Key? key, required this.title}) : super(key: key);
+  const Tutorial({Key? key, required this.title, required this.collectionId})
+      : super(key: key);
 
   final String title;
+  final String collectionId;
   static const routeName = "Tutorial";
 
   @override
@@ -84,7 +87,12 @@ class _TutorialState extends State<Tutorial> {
               onPressed: () {
                 screenCounter++;
                 if (screenCounter == 3) {
-                  Navigator.of(context).pushNamed(MapViewScreen.routeName);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MapViewScreen(
+                              title: appTitle,
+                              collectionId: widget.collectionId)));
                   return; //Prevents invoking setState when routing.
                 }
                 setState(() {

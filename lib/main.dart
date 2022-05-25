@@ -10,5 +10,5 @@ void main() async {
   await Firebase.initializeApp();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await dotenv.load(fileName: "assets/.env");
-  runApp(MyApp());
+  runApp(const MyApp());
 }
