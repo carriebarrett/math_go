@@ -18,8 +18,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   //Checks if a user is currently logged in.
   bool _isDisabled() {
-    return false;
-    // return FirebaseAuth.instance.currentUser == null;
+    return FirebaseAuth.instance.currentUser == null;
   }
 
   final _database = FirebaseDatabase.instance.ref();
@@ -91,10 +90,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MapViewScreen(
+                              builder: (context) => MapViewScreen(
                                   title: appTitle,
-                                  collectionId:
-                                      'F7pByf4fiUfGApYkGlOOjez1MW23')));
+                                  collectionId: user?.uid ?? '')));
                     },
               child: const Text("Existing Account")),
           const SizedBox(
@@ -108,9 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const Tutorial(
-                            title: appTitle,
-                            collectionId: 'F7pByf4fiUfGApYkGlOOjez1MW23')));
+                        builder: (context) => Tutorial(
+                            title: appTitle, collectionId: user?.uid ?? '')));
                 setState(() {
                   _isDisabled();
                 });
