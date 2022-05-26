@@ -33,7 +33,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
   LocationData? locationData;
   var locationService = Location();
   final random = Random();
-  late List<Marker> beastieMarkers = [];
+  late Map<Beastie, Marker> beastiesMarkers = {};
 
   @override
   void initState() {
@@ -81,13 +81,19 @@ class _MapViewScreenState extends State<MapViewScreen> {
   }
 
   Future<void> onTapBeastie(Beastie beastie) async {
-    await Navigator.push(
+    BattleResult result = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => BattleScreen(
                 title: appTitle,
                 beastie: beastie,
                 collectionId: widget.collectionId)));
+    // Assuming we want to remove the beastie if:
+    // - the time runs out,
+    // - question is answered incorrectly,
+    // - beastie is captured,
+    // - or user exits battle
+    if (result != BattleResult.fledBattle) beastiesMarkers.remove(beastie);
   }
 
   Widget map(BuildContext context) {
@@ -112,18 +118,20 @@ class _MapViewScreenState extends State<MapViewScreen> {
                   }
 
                   final allBeastieList = snapshot.data;
-                  while (beastieMarkers.length < 4) {
-                    beastieMarkers.add(BeastieWidget(
-                            initialLocationData: currLocation.data,
-                            beastie: allBeastieList[
-                                random.nextInt(allBeastieList.length)],
-                            onTapFn: onTapBeastie,
-                            locationService: locationService)
-                        .spawnMarker());
+                  while (beastiesMarkers.length < 4) {
+                    final randomBeastie =
+                        allBeastieList[random.nextInt(allBeastieList.length)];
+                    final newBeastie = BeastieWidget(
+                        initialLocationData: currLocation.data,
+                        beastie: randomBeastie,
+                        onTapFn: onTapBeastie,
+                        locationService: locationService);
+                    beastiesMarkers[randomBeastie] = newBeastie.spawnMarker();
                   }
                   mapController.onReady.then((_) {
                     mapController.move(mapCenter, zoomLevel);
-                    removeOutOfBoundsBeasties(beastieMarkers, mapController);
+                    removeOutOfBoundsBeasties(
+                        beastiesMarkers.values.toList(), mapController);
                   });
                   return FlutterMap(
                     mapController: mapController,
@@ -141,7 +149,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                             'accessToken': dotenv.env['MAPBOX_API_KEY']!,
                             'id': 'mapbox.mapbox-streets-v8'
                           }),
-                      MarkerLayerOptions(markers: [...beastieMarkers]),
+                      MarkerLayerOptions(
+                          markers: [...beastiesMarkers.values.toList()]),
                     ],
                   );
                 });
@@ -159,7 +168,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
         body: Center(
             child: Stack(children: [
           map(context),
-          const Avatar(),
+          ...(locationData != null ? [const Avatar()] : []),
           IgnorePointer(child: buildCompass())
         ])),
         floatingActionButton: FloatingActionButton(

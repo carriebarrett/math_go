@@ -16,3 +16,5 @@ final sampleBeastie = Beastie(
     type: 'Blob',
     question: '2 + 2',
     answer: 4);
+
+enum BattleResult { captured, lost, fledBattle }

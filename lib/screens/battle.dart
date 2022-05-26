@@ -26,6 +26,7 @@ class BattleScreen extends StatefulWidget {
 class _BattleScreenState extends State<BattleScreen> {
   final _formKey = GlobalKey<FormState>();
   final AnswerDTO _answerDTO = AnswerDTO();
+  String optionSelected = '';
 
   @override
   void initState() {
@@ -38,14 +39,15 @@ class _BattleScreenState extends State<BattleScreen> {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text('The beastie got away!'),
     ));
-    int count = 0;
-    Navigator.of(context).popUntil((_) => count++ >= 2);
+    Navigator.pop(context, BattleResult.lost);
   }
 
   // This is a placeholder for more complex logic when we have the
   // actual question from the db
   bool isCorrectAnswer(answer, expectedResponse) {
-    return answer == expectedResponse;
+    return expectedResponse is String
+        ? answer == expectedResponse
+        : answer == expectedResponse.toString();
   }
 
 // placeholder function to add the beastie to the db
@@ -54,103 +56,62 @@ class _BattleScreenState extends State<BattleScreen> {
         .updateCollection(widget.collectionId, widget.beastie.beastieID);
   }
 
-  Future<void> showQuestion(BuildContext context) async {
-    return await showDialog(
-        context: context,
-        builder: (context) {
-          final TextEditingController _textEditingController =
-              TextEditingController();
-          return AlertDialog(
-            content: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 5, 0),
-                      child: Container(
-                        alignment: FractionalOffset.topRight,
-                        child: GestureDetector(
-                          child: const Icon(Icons.close_rounded),
-                          onTap: () {
-                            Navigator.of(context).pop();
+  Widget form() {
+    if (['true', 'false'].contains(widget.beastie.answer.toString())) {
+      return Column(
+        children: [
+          FormField(
+              validator: (value) => null,
+              onSaved: (Object? _) {
+                _answerDTO.answer = optionSelected;
+              },
+              builder: (FormFieldState state) {
+                return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                          onPressed: () {
+                            optionSelected = 'true';
+                            setState(() {});
                           },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      widget.beastie.question,
-                      textAlign: TextAlign.center,
-                      style:
-                          const TextStyle(fontWeight: FontWeight.bold, fontSize: 28),
-                    ),
-                    const SizedBox(height: 5),
-                    TextFormField(
-                      textAlign: TextAlign.center,
-                      controller: _textEditingController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Answer may not be empty';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _answerDTO.answer = value as String;
-                      },
-                      decoration:
-                          const InputDecoration(hintText: "Enter your answer"),
-                    ),
-                  ],
-                )),
-            actions: <Widget>[
-              Row(
-                children: [
-                  TextButton(
-                    child: const Text('Exit battle',
-                        style: TextStyle(color: Colors.red)),
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Fleeing the battle!'),
-                      ));
-                      int count = 0;
-                      Navigator.of(context).popUntil((_) => count++ >= 2);
-                    },
-                  ),
-                  const Spacer(),
-                  TextButton(
-                    child: const Text('Enter'),
-                    onPressed: () {
-                      final validatedAnswer = _formKey.currentState!.validate();
-                      if (validatedAnswer) {
-                        _formKey.currentState?.save();
-                        // The answer and beastie name are hardcoded until
-                        // we have data from db
-                        var beastieName = widget.beastie.name;
-                        if (isCorrectAnswer(_answerDTO.answer, widget.beastie.answer)) {
-                          addBeastieToCollection();
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                            content:
-                                Text('You successfully captured $beastieName'),
-                          ));
-                        } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(SnackBar(
-                            content: Text('$beastieName got away!'),
-                          ));
-                        }
-                        int count = 0;
-                        Navigator.of(context).popUntil((_) => count++ >= 2);
-                      }
-                    },
-                  )
-                ],
-              ),
-            ],
-          );
-        });
+                          child: const Text('True',
+                              style: TextStyle(color: Colors.white)),
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.green))),
+                      TextButton(
+                          onPressed: () {
+                            optionSelected = 'false';
+                            setState(() {});
+                          },
+                          child: const Text('False',
+                              style: TextStyle(color: Colors.white)),
+                          style: ButtonStyle(
+                              backgroundColor:
+                                  MaterialStateProperty.all<Color>(Colors.red)))
+                    ]);
+              }),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [const Text('You selected: '), Text(optionSelected)],
+          )
+        ],
+      );
+    }
+    return TextFormField(
+      textAlign: TextAlign.center,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Answer may not be empty';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _answerDTO.answer = value as String;
+      },
+      decoration: const InputDecoration(hintText: "Enter your answer"),
+    );
   }
 
   @override
@@ -160,16 +121,75 @@ class _BattleScreenState extends State<BattleScreen> {
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
       body: Center(
-        child: GestureDetector(
-          onTap: () async {
-            await showQuestion(context);
-          }, // Image tapped
-          child: Image.asset(
-            widget.beastie.imagePath,
-            fit: BoxFit.contain, // Fixes border issues
-            width: 100,
-            height: 100,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  widget.beastie.imagePath,
+                  fit: BoxFit.contain, // Fixes border issues
+                  width: 100,
+                  height: 100,
+                ),
+                Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          widget.beastie.question,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 28),
+                        ),
+                        const SizedBox(height: 5),
+                        form(),
+                      ],
+                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: const Text('Exit battle',
+                          style: TextStyle(color: Colors.red)),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Fleeing the battle!'),
+                        ));
+                        Navigator.pop(context, BattleResult.fledBattle);
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Enter'),
+                      onPressed: () {
+                        final validatedAnswer =
+                            _formKey.currentState!.validate();
+                        if (validatedAnswer) {
+                          _formKey.currentState?.save();
+                          var beastieName = widget.beastie.name;
+                          if (isCorrectAnswer(
+                              _answerDTO.answer, widget.beastie.answer)) {
+                            addBeastieToCollection();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'You successfully captured $beastieName'),
+                            ));
+                            Navigator.pop(context, BattleResult.captured);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('$beastieName got away!'),
+                            ));
+                            Navigator.pop(context, BattleResult.lost);
+                          }
+                        }
+                      },
+                    )
+                  ],
+                )
+              ]),
         ),
       ),
     );
