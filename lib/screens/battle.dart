@@ -160,16 +160,75 @@ class _BattleScreenState extends State<BattleScreen> {
       appBar:
           AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
       body: Center(
-        child: GestureDetector(
-          onTap: () async {
-            await showQuestion(context);
-          }, // Image tapped
-          child: Image.asset(
-            widget.beastie.imagePath,
-            fit: BoxFit.contain, // Fixes border issues
-            width: 100,
-            height: 100,
-          ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Image.asset(
+                  widget.beastie.imagePath,
+                  fit: BoxFit.contain, // Fixes border issues
+                  width: 100,
+                  height: 100,
+                ),
+                Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          widget.beastie.question,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 28),
+                        ),
+                        const SizedBox(height: 5),
+                        form(),
+                      ],
+                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    TextButton(
+                      child: const Text('Exit battle',
+                          style: TextStyle(color: Colors.red)),
+                      onPressed: () {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Fleeing the battle!'),
+                        ));
+                        Navigator.pop(context, BattleResult.fledBattle);
+                      },
+                    ),
+                    TextButton(
+                      child: const Text('Enter'),
+                      onPressed: () {
+                        final validatedAnswer =
+                            _formKey.currentState!.validate();
+                        if (validatedAnswer) {
+                          _formKey.currentState?.save();
+                          var beastieName = widget.beastie.name;
+                          if (isCorrectAnswer(
+                              _answerDTO.answer, widget.beastie.answer)) {
+                            addBeastieToCollection();
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text(
+                                  'You successfully captured $beastieName'),
+                            ));
+                            Navigator.pop(context, BattleResult.captured);
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text('$beastieName got away!'),
+                            ));
+                            Navigator.pop(context, BattleResult.lost);
+                          }
+                        }
+                      },
+                    )
+                  ],
+                )
+              ]),
         ),
       ),
     );
