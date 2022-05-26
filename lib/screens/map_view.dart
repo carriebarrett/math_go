@@ -168,7 +168,7 @@ class _MapViewScreenState extends State<MapViewScreen> {
         body: Center(
             child: Stack(children: [
           map(context),
-          const Avatar(),
+          ...(locationData != null ? [const Avatar()] : []),
           IgnorePointer(child: buildCompass())
         ])),
         floatingActionButton: FloatingActionButton(
