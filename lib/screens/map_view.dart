@@ -90,9 +90,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                 collectionId: widget.collectionId)));
     // Assuming we want to remove the beastie if:
     // - the time runs out,
-    // - question is answered incorrectly,
-    // - beastie is captured,
-    // - or user exits battle
+    // - question is answered incorrectly, OR
+    // - beastie is captured
     if (result != BattleResult.fledBattle) beastiesMarkers.remove(beastie);
   }
 
