@@ -38,20 +38,29 @@ class _LoginScreenState extends State<LoginScreen> {
       idToken: googleAuth?.idToken,
     );
 
-    // Set initial values on sign in  with Google
-    final User? user = auth.currentUser;
-    final path = user?.uid;
-    final userDatabase = _database.child('/Users/').child(path!);
-    userDatabase.update({
-      'userID': user?.uid,
-      'beastieCollectionID': user?.uid,
-      'email': user?.email
+    // currentUser might be null at first for erroneous reasons
+    // so we need to wait until it's not null
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        debugPrint('User is currently signed out!');
+      } else {
+        // Set initial values on sign in  with Google
+        final User? user = auth.currentUser;
+        final path = user?.uid;
+        final userDatabase = _database.child('/Users/').child(path!);
+        userDatabase.update({
+          'userID': user?.uid,
+          'beastieCollectionID': user?.uid,
+          'email': user?.email
+        });
+
+        // Setup the Beastie Collection for the user
+        final addCollection =
+            _database.child('/BeastieCollection/').child(path);
+        addCollection
+            .update({'beastieCollectionID': user?.uid, 'beastieIDs': '[]'});
+      }
     });
-
-    // Setup the Beastie Collection for the user
-    final addCollection = _database.child('/BeastieCollection/').child(path);
-    addCollection.update({'beastieCollectionID': user?.uid});
-
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
