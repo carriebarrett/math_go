@@ -95,6 +95,30 @@ class _MapViewScreenState extends State<MapViewScreen> {
     if (result != BattleResult.fledBattle) beastiesMarkers.remove(beastie);
   }
 
+  Future<bool> showExitPopup() async {
+    return await showDialog(
+      //show confirm dialogue
+      //the return value will be from "Yes" or "No" options
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Exit App'),
+        content: const Text('Do you want to exit Math Go?'),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            //return false when click on "NO"
+            child: const Text('No'),
+          ),
+          ElevatedButton(
+            onPressed: () => SystemNavigator.pop(),
+            //Exit program when click on "Yes"
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget map(BuildContext context) {
     MapControllerImpl mapController = MapControllerImpl();
     if (locationData == null) {
@@ -159,7 +183,9 @@ class _MapViewScreenState extends State<MapViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: showExitPopup,
+      child: Scaffold(
         appBar: AppBar(
             centerTitle: true,
             title: Image.asset(logoImage, height: 40),
@@ -179,6 +205,8 @@ class _MapViewScreenState extends State<MapViewScreen> {
                         title: appTitle, collectionId: widget.collectionId))),
           },
           child: const Icon(Icons.collections_bookmark),
-        ));
+        ),
+      ),
+    );
   }
 }
