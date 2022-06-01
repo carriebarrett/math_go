@@ -118,8 +118,11 @@ class _BattleScreenState extends State<BattleScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.cyan[100],
-      appBar:
-          AppBar(centerTitle: true, title: Image.asset(logoImage, height: 40)),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Image.asset(logoImage, height: 40),
+        automaticallyImplyLeading: false,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
